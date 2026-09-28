@@ -21,10 +21,6 @@ void AOrbAreanEnergyOrb::BeginPlay()
 	
 	PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(),0);
 	TArray<AOrbAreanEnergyOrb> EnergyOrbs;
-	for (int i=0; i>EnergyOrbs.Num(); i++)
-	{
-		
-	}
 	
 }
 
