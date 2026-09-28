@@ -35,14 +35,31 @@ void AOAPlayerCharecter::BeginPlay()
 	}
 	
 	TArray<AActor*> EnergyOrbs;
+
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(),AOrbAreanEnergyOrb::StaticClass(),EnergyOrbs);
 	
 	for (AActor* Orb : EnergyOrbs)
 	{
 		ArrayOfOrbs.Add(Cast<AOrbAreanEnergyOrb>(Orb));
+		ArrayOrbsNames.Add(Cast<AOrbAreanEnergyOrb>(Orb)->OrbName);
 	}
 	AmountOfOrbsLeft = ArrayOfOrbs.Num();
 	
+	
+	for (int i = 0; i < ArrayOrbsNames.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Orb name = %s"), *ArrayOrbsNames[i] );
+	}
+	
+	for (FString Orb : ArrayOrbsNames)
+	{
+		if (Orb == "No.29")
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Orb name %s exsiste"), *Orb );
+		}
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("---------------------------------------------") )
 // HomeWork week 39
 	TArray<int32> ArrayOfNum = {3,6,32,8,3,23,5,2,5,55,32,6,8,2,5,8};
 	int32 Biggest = 0;

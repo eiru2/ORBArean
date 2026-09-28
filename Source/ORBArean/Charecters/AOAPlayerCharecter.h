@@ -129,8 +129,13 @@ public:
 	
 	UPROPERTY(EditAnywhere,Category="Game|Info")
 	EGameDifficulty GameDifficulty = EGameDifficulty::Easy;
+	
 	TArray<AOrbAreanEnergyOrb*> ArrayOfOrbs;
 	int32 AmountOfOrbsLeft;
+	
+	TArray<FString> ArrayOrbsNames;
+	
+
 	
 	void AddScore(int32 InAmount);
 	void DamgePlayer(float InAmount);
