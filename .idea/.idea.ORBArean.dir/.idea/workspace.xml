@@ -13,8 +13,10 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62b4b94c-318c-4b0c-a6cf-4936f978aa3d" name="Changes" comment="ORBArean">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="62b4b94c-318c-4b0c-a6cf-4936f978aa3d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ORBArean.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ORBArean.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ORBArean/Charecters/AOAPlayerCharecter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/Charecters/AOAPlayerCharecter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/ORBArean/Charecters/AOAPlayerCharecter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/Charecters/AOAPlayerCharecter.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +180,8 @@
     </ignored-roots>
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="ORBArean" />
-    <option name="LAST_COMMIT_MESSAGE" value="ORBArean" />
+    <MESSAGE value="erty" />
+    <option name="LAST_COMMIT_MESSAGE" value="erty" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

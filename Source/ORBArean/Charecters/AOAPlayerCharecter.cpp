@@ -5,6 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Microsoft/AllowMicrosoftPlatformTypes.h"
 
 
@@ -19,7 +20,7 @@ AOAPlayerCharecter::AOAPlayerCharecter()
 void AOAPlayerCharecter::BeginPlay()
 {
 	Super::BeginPlay();
-	AActor::SetActorLabel( FString("dumbAss") );
+	SetActorLabel( FString("dumbAss") );
 	UpdatePlayerSpeed();
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
@@ -31,6 +32,17 @@ void AOAPlayerCharecter::BeginPlay()
 				InputSubsystem->AddMappingContext(DefaultMappingContext, 0);
 			}
 		}
+	}
+	
+	TArray<AActor*> EnergyOrbs;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(),AOrbAreanEnergyOrb::StaticClass(),EnergyOrbs);
+	
+	for (AActor* i : EnergyOrbs)
+	{
+		
+	}
+	{
+		
 	}
 }
 
