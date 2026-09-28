@@ -37,13 +37,23 @@ void AOAPlayerCharecter::BeginPlay()
 	TArray<AActor*> EnergyOrbs;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(),AOrbAreanEnergyOrb::StaticClass(),EnergyOrbs);
 	
-	for (AActor* i : EnergyOrbs)
+	for (AActor* Orb : EnergyOrbs)
 	{
-		
+		ArrayOfOrbs.Add(Cast<AOrbAreanEnergyOrb>(Orb));
 	}
+	AmountOfOrbsLeft = ArrayOfOrbs.Num();
+	
+// HomeWork week 39
+	TArray<int32> ArrayOfNum = {3,6,32,8,3,23,5,2,5,55,32,6,8,2,5,8};
+	int32 Biggest = 0;
+	for (int i = 0; i<ArrayOfNum.Num(); i++)
 	{
-		
+		if (Biggest < ArrayOfNum[i])
+		{
+			Biggest = ArrayOfNum[i];
+		}
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Biggest Number = %d"), Biggest)
 }
 
 
@@ -51,8 +61,7 @@ void AOAPlayerCharecter::BeginPlay()
 void AOAPlayerCharecter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	
+	// UpdateOrb(ArrayOfOrbs);
 	PrintDebugValues();
 	CheckGameState();
 }
@@ -169,6 +178,10 @@ void AOAPlayerCharecter::CheckGameState()
 		GameState =  EGameState::Won;
 		UE_LOG(LogTemp, Warning, TEXT("Game Won"))
 	}
+	else if (AmountOfOrbsLeft <=0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Orb Left"))
+	}
 	
 }
 
@@ -179,6 +192,7 @@ void AOAPlayerCharecter::PrintDebugValues()
 	GEngine->AddOnScreenDebugMessage(3,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Life: %i"), Life));
 	GEngine->AddOnScreenDebugMessage(8,0.11f,FColor::Emerald,FString::Printf(TEXT("Player pos: %s"), *GetActorLocation().ToString()));
 	GEngine->AddOnScreenDebugMessage(9,0.11f,FColor::Emerald,FString::Printf(TEXT("Player sprinting: %i"), Sprinting));
+	GEngine->AddOnScreenDebugMessage(10,0.11f,FColor::Emerald,FString::Printf(TEXT("Orbs Left: %i"), AmountOfOrbsLeft));
 	
 	
 	if (CurrentMovmentSpeed > 2000.0f)
@@ -292,7 +306,18 @@ void AOAPlayerCharecter::InputStopSprint()
 	UpdatePlayerSpeed();
 }
 
-
+void AOAPlayerCharecter::UpdateOrb(TArray<AOrbAreanEnergyOrb*> ArrayOrbs)
+{
+	for (AOrbAreanEnergyOrb* Orb : ArrayOrbs)
+	{
+		if (not IsValid(Orb))
+		{
+			ArrayOfOrbs.Remove(Orb);
+			AmountOfOrbsLeft--;
+			UE_LOG(LogTemp, Warning, TEXT("Orb Aray Length %d pointers"),ArrayOfOrbs.Num())
+		}
+	}
+}
 
 
 // void AOAPlayerCharecter::MovePlayer(float DeltaTime)

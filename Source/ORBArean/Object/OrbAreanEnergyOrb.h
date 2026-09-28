@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ORBArean/Charecters/AOAPlayerCharecter.h"
+
 #include "OrbAreanEnergyOrb.generated.h"
 
 UCLASS()

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "../Object/OrbAreanEnergyOrb.h"
+#include "ORBArean/Object/OrbAreanEnergyOrb.h"
 //#include "../../../../../../../Program Files/Epic Games/UE_5.8/Engine/Plugins/Media/AjaMedia/Source/AjaMedia/Private/Shared/AjaMediaAllowPlatformTypes.h"
 #include "Splines/SplineMath.h"
 #include "EnhancedInputSubsystems.h"
@@ -129,7 +129,8 @@ public:
 	
 	UPROPERTY(EditAnywhere,Category="Game|Info")
 	EGameDifficulty GameDifficulty = EGameDifficulty::Easy;
-	
+	TArray<AOrbAreanEnergyOrb*> ArrayOfOrbs;
+	int32 AmountOfOrbsLeft;
 	
 	void AddScore(int32 InAmount);
 	void DamgePlayer(float InAmount);
@@ -155,6 +156,7 @@ public:
 	void InputStartSprint();
 	void InputStopSprint();
 	
+	void UpdateOrb(TArray<AOrbAreanEnergyOrb*> ArrayOrbs);
 	
 	//void PlayerControlss();
 	//void MovePlayerUnreal();
