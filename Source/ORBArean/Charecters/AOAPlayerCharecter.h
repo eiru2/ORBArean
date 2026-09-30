@@ -65,7 +65,8 @@ enum class EGameDifficulty : uint8
 {
 	Easy,
 	Medium,
-	Hard
+	Hard,
+	Test
 };
 // FLootDrop
 
@@ -87,6 +88,7 @@ struct FLootDrop
 		Legndery,
 	};
 	ERarity Rarity;
+	TArray<FString> RartyLabel = {	"Common","Uncommon","Rare","SuperRare","UberRare","Legndery",};
 };
 
 
@@ -116,17 +118,13 @@ public:
 	
 	FEnemyState Enemy;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Loot")
+	UPROPERTY(EditAnywhere, Category = "Loot")
 	TArray<FLootDrop> ArrayLootDrop = {
 		FLootDrop("RustySword", 10, FLootDrop::Common),
 		FLootDrop ("Sword", 25, FLootDrop::Rare),
 		FLootDrop ("HeroSword", 50, FLootDrop::Legndery),
 		FLootDrop ("LoveSword", 99999, FLootDrop::Legndery),
 	};
-	UPROPERTY(EditDefaultsOnly, Category = "Loot")
-	TArray<FString> RartyLabel = {	"Common","Uncommon","Rare","SuperRare","UberRare","Legndery",};
-	
-	
 	
 	//void AddScore(int32 InAmount);
 	//void HealPlayer(float InAmount);
@@ -160,13 +158,13 @@ public:
 	float TempDamge = 10.f;
 	
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
-	float EasyMovmentSpeed = 1200.0f;
+	float CurrentMovmentSpeed = PlayerAttribute.BaseSpeed;
+	// Easy, Medium Harde
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
-	float MediumMovmentSpeed = 800.0f;
-	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
-	float HardMovmentSpeed = 400.0f;
-	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
-	float CurrentMovmentSpeed = 1200.0f;
+	// Can break if there is duplicate keys
+	TMap<EGameDifficulty, float> DifficultySpeedMultiplier;
+
+	
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
 	float SprintMultiplier = 2.f;
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")

@@ -22,6 +22,10 @@ void AOAPlayerCharecter::BeginPlay()
 	Super::BeginPlay();
 	SetActorLabel( FString("dumbAss") );
 	
+	DifficultySpeedMultiplier.Add(EGameDifficulty::Easy, 1.0f);
+	DifficultySpeedMultiplier.Add(EGameDifficulty::Medium, 0.75f);
+	DifficultySpeedMultiplier.Add(EGameDifficulty::Hard, 0.5f);
+	
 
 	UpdatePlayerSpeed();
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
@@ -91,7 +95,7 @@ void AOAPlayerCharecter::BeginPlay()
 		// FText Rarty;
 		// UEnum::GetDisplayValueAsText(LootDrop.Rarity, Rarty);
 		// UE_LOG(LogTemp, Warning, TEXT("Rarty %s"), *Rarty.ToString())
-		UE_LOG(LogTemp, Warning, TEXT("Rarty %s"),*RartyLabel[LootDrop.Rarity])
+		UE_LOG(LogTemp, Warning, TEXT("Rarty %s"),*LootDrop.RartyLabel[LootDrop.Rarity])
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("---------------------------------------------") )
@@ -195,25 +199,26 @@ void AOAPlayerCharecter::HealPlayer(float InAmount)
 
 void AOAPlayerCharecter::UpdatePlayerSpeed()
 {
-	switch(GameDifficulty)
-	{
-		case EGameDifficulty::Easy:
-			CurrentMovmentSpeed = EasyMovmentSpeed;
-			break;
-		case EGameDifficulty::Medium:
-			CurrentMovmentSpeed = MediumMovmentSpeed;
-			break;
-		case EGameDifficulty::Hard:
-			CurrentMovmentSpeed = HardMovmentSpeed;
-			break;
-	}
+	// switch(GameDifficulty)
+	// {
+	// 	case EGameDifficulty::Easy:
+	// 		CurrentMovmentSpeed = EasyMovmentSpeed;
+	// 		break;
+	// 	case EGameDifficulty::Medium:
+	// 		CurrentMovmentSpeed = MediumMovmentSpeed;
+	// 		break;
+	// 	case EGameDifficulty::Hard:
+	// 		CurrentMovmentSpeed = HardMovmentSpeed;
+	// 		break;
+	// }
 	float SpeedMultiplier = 1.f;
 	if (Sprinting)
 	{
 		SpeedMultiplier += SprintMultiplier; 
 	}
 	
-	GetCharacterMovement() ->MaxWalkSpeed = CurrentMovmentSpeed*SpeedMultiplier;
+	CurrentMovmentSpeed = PlayerAttribute.BaseSpeed*DifficultySpeedMultiplier.FindRef(GameDifficulty)*SpeedMultiplier;
+	GetCharacterMovement() ->MaxWalkSpeed = CurrentMovmentSpeed;
 	Acceleration = CurrentMovmentSpeed*2;
 	GetCharacterMovement() ->MaxAcceleration = Acceleration;	
 }
@@ -239,54 +244,49 @@ void AOAPlayerCharecter::CheckGameState()
 
 void AOAPlayerCharecter::PrintDebugValues()
 {
-	GEngine->AddOnScreenDebugMessage(1,0.11f,FColor::Emerald,FString::Printf(TEXT("Score: %i"), Score));
+	GEngine->AddOnScreenDebugMessage(1,0.11f,FColor::Emerald,FString::Printf(TEXT("------------------------Player State---------------------")));
 	GEngine->AddOnScreenDebugMessage(2,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Health: %.2f"), PlayerAttribute.Health));
 	GEngine->AddOnScreenDebugMessage(3,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Life: %i"), PlayerAttribute.Life));
-	GEngine->AddOnScreenDebugMessage(8,0.11f,FColor::Emerald,FString::Printf(TEXT("Player pos: %s"), *GetActorLocation().ToString()));
-	GEngine->AddOnScreenDebugMessage(9,0.11f,FColor::Emerald,FString::Printf(TEXT("Player sprinting: %i"), Sprinting));
-	GEngine->AddOnScreenDebugMessage(10,0.11f,FColor::Emerald,FString::Printf(TEXT("Orbs Left: %i"), AmountOfOrbsLeft));
 	
-	
+	GEngine->AddOnScreenDebugMessage(4,0.11f,FColor::Red,FString::Printf(TEXT("------------------------Player Speed---------------------")));
+	GEngine->AddOnScreenDebugMessage(5,0.11f,FColor::Red,FString::Printf(TEXT("Player pos: %s"), *GetActorLocation().ToString()));
+	GEngine->AddOnScreenDebugMessage(6,0.11f,FColor::Red,FString::Printf(TEXT("Player sprinting: %i"), Sprinting));
 	if (CurrentMovmentSpeed > 2000.0f)
 	{
 		
-		GEngine->AddOnScreenDebugMessage(4,0.11f,FColor::Red,FString::Printf(TEXT("Player is Sonic!! Movement Speed: %.2f"), CurrentMovmentSpeed));
+		GEngine->AddOnScreenDebugMessage(7,0.11f,FColor::Red,FString::Printf(TEXT("Player is Sonic!! Movement Speed: %.2f"), CurrentMovmentSpeed));
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(4,0.11f,FColor::Red,FString::Printf(TEXT("Player Movement Speed: %.2f"), CurrentMovmentSpeed));
+		GEngine->AddOnScreenDebugMessage(7,0.11f,FColor::Red,FString::Printf(TEXT("Player Movement Speed: %.2f"), CurrentMovmentSpeed));
 	}
-	GEngine->AddOnScreenDebugMessage(5,0.11f,FColor::Red,FString::Printf(TEXT("Player Name: %s"), *Name));
+	
+	GEngine->AddOnScreenDebugMessage(8,0.11f,FColor::Yellow,FString::Printf(TEXT("------------------------Game Info---------------------")));
+	GEngine->AddOnScreenDebugMessage(9,0.11f,FColor::Yellow,FString::Printf(TEXT("Score: %i"), Score));
+	GEngine->AddOnScreenDebugMessage(10,0.11f,FColor::Yellow,FString::Printf(TEXT("Orbs Left: %i"), AmountOfOrbsLeft));
 	switch(GameState){
 		case  EGameState::Playing:
-			GEngine->AddOnScreenDebugMessage(6,0.11f,FColor::Red,FString::Printf(TEXT("Game Playing: %i"), GameState));
+			GEngine->AddOnScreenDebugMessage(11,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Playing: %i"), GameState));
 			break;
 		case  EGameState::Won:
-			GEngine->AddOnScreenDebugMessage(6,0.11f,FColor::Red,FString::Printf(TEXT("Game Won %i"), GameState));
+			GEngine->AddOnScreenDebugMessage(11,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Won %i"), GameState));
 			break;
 		case  EGameState::Lost:
-			GEngine->AddOnScreenDebugMessage(6,0.11f,FColor::Red,FString::Printf(TEXT("Game lost %i"), GameState));
+			GEngine->AddOnScreenDebugMessage(11,0.11f,FColor::Yellow,FString::Printf(TEXT("Game lost %i"), GameState));
 			break;
 	}
 	switch(GameDifficulty){
 		case EGameDifficulty::Easy:
-			GEngine->AddOnScreenDebugMessage(7,0.11f,FColor::Red,FString::Printf(TEXT("Game Difficulty Esay: %i"), GameDifficulty));
+			GEngine->AddOnScreenDebugMessage(12,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Difficulty Esay: %i"), GameDifficulty));
 			break;
 		case EGameDifficulty::Medium:
-			GEngine->AddOnScreenDebugMessage(7,0.11f,FColor::Red,FString::Printf(TEXT("Game Difficulty Medium: %i"), GameDifficulty));
+			GEngine->AddOnScreenDebugMessage(12,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Difficulty Medium: %i"), GameDifficulty));
 			break;
 		case EGameDifficulty::Hard:
-			GEngine->AddOnScreenDebugMessage(7,0.11f,FColor::Red,FString::Printf(TEXT("Game Difficulty Hard: %i"), GameDifficulty));
+			GEngine->AddOnScreenDebugMessage(12,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Difficulty Hard: %i"), GameDifficulty));
 			break;
 	}
-
-	PlayerPos = GetActorLocation().ToString();
-	//GEngine->AddOnScreenDebugMessage(8,0.11f,FColor::Red,FString::Printf(TEXT("Player loction %s"), *PlayerPos));
 }
-
-
-
-
 
 void AOAPlayerCharecter::MovePlayer(const FInputActionValue& Value)
 {
@@ -299,7 +299,6 @@ void AOAPlayerCharecter::MovePlayer(const FInputActionValue& Value)
 	AddMovementInput(GetActorForwardVector(), MovementValue.X);
 	AddMovementInput(GetActorRightVector(), MovementValue.Y);
 }
-
 
 // Input Calls
 void AOAPlayerCharecter::InputHeal()
@@ -358,27 +357,15 @@ void AOAPlayerCharecter::InputStopSprint()
 	UpdatePlayerSpeed();
 }
 
-void AOAPlayerCharecter::UpdateOrb(Arb)
+void AOAPlayerCharecter::UpdateOrb(AOrbAreanEnergyOrb* Orb)
 {
-	// TArray<AOrbAreanEnergyOrb> Array = ArrayOfOrbs;
-	TArray<AOrbAreanEnergyOrb*> OrbsToRemove;
-	for (AOrbAreanEnergyOrb* Orb : ArrayOfOrbs)
+	if (Orb)
 	{
-		if (not IsValid(Orb))
-		{
-			// OrbsToRemove.Add(Orb);
-			ArrayOfOrbs.Remove(Orb);
-			AmountOfOrbsLeft--;
-			UE_LOG(LogTemp, Warning, TEXT("Orb Aray Length %d pointers"),ArrayOfOrbs.Num())
-		}
+		ArrayOfOrbs.Remove(Orb);
+		AmountOfOrbsLeft--;
+		UE_LOG(LogTemp, Warning, TEXT("Orb Aray Length %d pointers"),ArrayOfOrbs.Num())
+		
 	}
-	// To not modida looping array
-	// for (AOrbAreanEnergyOrb* Orb : OrbsToRemove)
-	// {
-	// 	ArrayOfOrbs.Remove(Orb);
-	// 	AmountOfOrbsLeft--;
-	// 	UE_LOG(LogTemp, Warning, TEXT("Orb Aray Length %d pointers"),ArrayOfOrbs.Num())
-	// }
 }
 
 
