@@ -53,7 +53,7 @@ void AOrbAreanEnergyOrb::OrbPickedUp(int32 InPointValue)
 		Cast<AOAPlayerCharecter>(PlayerCharacter)->AddScore(InPointValue);
 		UE_LOG(LogTemp,Warning,TEXT("Picked Up!! Orb %s Baind %d points"), *OrbName , OrbPointValue);
 		Destroy();
-		Cast<AOAPlayerCharecter>(PlayerCharacter)->UpdateOrb(Cast<AOAPlayerCharecter>(PlayerCharacter)->ArrayOfOrbs);
+		Cast<AOAPlayerCharecter>(PlayerCharacter)->UpdateOrb(this);
 	}
 }
 

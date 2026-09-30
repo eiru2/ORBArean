@@ -10,6 +10,45 @@
 #include "EnhancedInputSubsystems.h"
 #include "AOAPlayerCharecter.generated.h"
 
+USTRUCT(meta=(DisableSplitPin))
+struct FCharecterState
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere,Category="Health")
+	float Health = 100.0f;
+	UPROPERTY(EditAnywhere,Category="Health")
+	float MaxHealth = 100.0f;
+	UPROPERTY(EditAnywhere,Category="Health")
+	int32 Life = 3;
+	UPROPERTY(EditAnywhere,Category="Health")
+	int32 MaxLife = 3;
+	
+	UPROPERTY(EditAnywhere,Category="Speed")
+	float BaseSpeed = 1200;
+	
+	UPROPERTY(EditAnywhere,Category="Damage")
+	float Damage = 10;
+};
+
+USTRUCT()
+struct FEnemyState
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere,Category="Ennemy|Stats|Health")
+	float Health = 200.0f;
+	UPROPERTY(EditAnywhere,Category="Ennemy|Stats|Health")
+	float MaxHealth = 100.0f;
+	
+	UPROPERTY(EditAnywhere,Category="Ennemy|Stats|Speed")
+	float BaseSpeed = 1200;
+	
+	UPROPERTY(EditAnywhere,Category="Ennemy|Stats|Speed")
+	float Damage = 10;
+};
+
+
 UENUM()
 enum class EGameState : uint8
 {
@@ -27,6 +66,27 @@ enum class EGameDifficulty : uint8
 	Easy,
 	Medium,
 	Hard
+};
+// FLootDrop
+
+
+
+USTRUCT()
+struct FLootDrop
+{
+	GENERATED_BODY()
+	FString Name;
+	float Value;
+	enum ERarity
+	{
+		Common,
+		Uncommon,
+		Rare,
+		SuperRare,
+		UberRare,
+		Legndery,
+	};
+	ERarity Rarity;
 };
 
 
@@ -49,6 +109,24 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	
+	UPROPERTY(EditAnywhere,Category="Player")
+	FCharecterState PlayerAttribute;
+	
+	FEnemyState Enemy;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Loot")
+	TArray<FLootDrop> ArrayLootDrop = {
+		FLootDrop("RustySword", 10, FLootDrop::Common),
+		FLootDrop ("Sword", 25, FLootDrop::Rare),
+		FLootDrop ("HeroSword", 50, FLootDrop::Legndery),
+		FLootDrop ("LoveSword", 99999, FLootDrop::Legndery),
+	};
+	UPROPERTY(EditDefaultsOnly, Category = "Loot")
+	TArray<FString> RartyLabel = {	"Common","Uncommon","Rare","SuperRare","UberRare","Legndery",};
+	
+	
 	
 	//void AddScore(int32 InAmount);
 	//void HealPlayer(float InAmount);
@@ -73,24 +151,13 @@ public:
 	UPROPERTY(EditDefaultsOnly,Category="Input")
 	UInputAction* AddScoreAction;
 	
-	UPROPERTY(EditAnywhere,Category="Player|Stats|Health")
-	float Health = 100.0f;
+
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Health")
 	float TempHeal = 10.0f;
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Health")
 	float HealthWarningThreshold = 20.f;
-
 	bool LowHealthFlag = false;
 	float TempDamge = 10.f;
-	
-	UPROPERTY(EditAnywhere,Category="Player|Stats")
-	float MaxHealth = 100.0f;
-	
-	UPROPERTY(EditAnywhere,Category="Player|Stats")
-	int32 Life = 3;
-	
-	UPROPERTY(EditAnywhere,Category="Player|Stats")
-	int32 MaxLife = 3;
 	
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
 	float EasyMovmentSpeed = 1200.0f;
@@ -122,13 +189,16 @@ public:
 	FString Name = "Tor ";
 	
 	UPROPERTY(EditAnywhere,Category="Game|Info")
-	int32 ScoreWinCondition = 2000;
+	int64 ScoreWinCondition = 200000000000;
 	
 	UPROPERTY(EditAnywhere,Category="Game|Info")
 	EGameState GameState = EGameState::Playing;
 	
 	UPROPERTY(EditAnywhere,Category="Game|Info")
 	EGameDifficulty GameDifficulty = EGameDifficulty::Easy;
+	
+
+
 	
 	TArray<AOrbAreanEnergyOrb*> ArrayOfOrbs;
 	int32 AmountOfOrbsLeft;
@@ -161,7 +231,7 @@ public:
 	void InputStartSprint();
 	void InputStopSprint();
 	
-	void UpdateOrb(TArray<AOrbAreanEnergyOrb*> ArrayOrbs);
+	void UpdateOrb(AOrbAreanEnergyOrb* Orb);
 	
 	//void PlayerControlss();
 	//void MovePlayerUnreal();

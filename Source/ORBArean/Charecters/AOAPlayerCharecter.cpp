@@ -21,6 +21,8 @@ void AOAPlayerCharecter::BeginPlay()
 {
 	Super::BeginPlay();
 	SetActorLabel( FString("dumbAss") );
+	
+
 	UpdatePlayerSpeed();
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
@@ -71,6 +73,38 @@ void AOAPlayerCharecter::BeginPlay()
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Biggest Number = %d"), Biggest)
+	
+	
+	UE_LOG(LogTemp, Warning, TEXT("---------------------------------------------") )
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Health %f"), Enemy.Health )
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Max Health %f"), Enemy.MaxHealth )
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Base speed %f"), Enemy.BaseSpeed )
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Damage %f"), Enemy.Damage )
+	
+	UE_LOG(LogTemp, Warning, TEXT("---------------------------------------------") )
+	for (FLootDrop LootDrop : ArrayLootDrop)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("--------------New Loot--------------") )
+		UE_LOG(LogTemp, Warning, TEXT("LootName %s"), *LootDrop.Name )
+		UE_LOG(LogTemp, Warning, TEXT("Value %f"), LootDrop.Value )
+		// int32 temp = LootDrop.Rarity;
+		// FText Rarty;
+		// UEnum::GetDisplayValueAsText(LootDrop.Rarity, Rarty);
+		// UE_LOG(LogTemp, Warning, TEXT("Rarty %s"), *Rarty.ToString())
+		UE_LOG(LogTemp, Warning, TEXT("Rarty %s"),*RartyLabel[LootDrop.Rarity])
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("---------------------------------------------") )
+	Biggest = 0;
+	for (int i = 0; i<ArrayLootDrop.Num(); i++)
+	{
+		if (ArrayLootDrop[Biggest].Value < ArrayLootDrop[i].Value)
+		{
+			Biggest = i;
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Biggest Loot Value = %s"), *ArrayLootDrop[Biggest].Name)
+	
 }
 
 
@@ -108,25 +142,26 @@ void AOAPlayerCharecter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 void AOAPlayerCharecter::DamgePlayer(float InAmount)
 {
-	Health -= InAmount;
-	if (Health <=0)
+	
+	PlayerAttribute.Health -= InAmount;
+	if (PlayerAttribute.Health <=0)
 	{
 		LoseLife();
 	}
-	if (Health <= 0.25*MaxHealth)
+	if (PlayerAttribute.Health <= 0.25*PlayerAttribute.MaxHealth)
 	{
 		GEngine->AddOnScreenDebugMessage(8,2.11f,FColor::Emerald,TEXT("LowHealth"));
 	}
 	//Health = FMath::Min(Health,MaxHealth);
-	Health = FMath::Clamp(Health, 0.0f, MaxHealth);
+	PlayerAttribute.Health = FMath::Clamp(PlayerAttribute.Health, 0.0f, PlayerAttribute.MaxHealth);
 }
 
 void AOAPlayerCharecter::LoseLife()
 {
-	Life -=1;
-	Life = FMath::Clamp(Life, 0.0f, MaxLife);
-	Health = MaxHealth;
-	if (Life == 0)
+	PlayerAttribute.Life -=1;
+	PlayerAttribute.Life = FMath::Clamp(PlayerAttribute.Life, 0.0f, PlayerAttribute.MaxLife);
+	PlayerAttribute.Health = PlayerAttribute.MaxHealth;
+	if (PlayerAttribute.Life == 0)
 	{
 		GameState = EGameState::Lost;
 	}
@@ -153,9 +188,9 @@ void AOAPlayerCharecter::AddScore(int32 InAmount)
 
 void AOAPlayerCharecter::HealPlayer(float InAmount)
 {
-	Health += InAmount;
+	PlayerAttribute.Health += InAmount;
 	//Health = FMath::Min(Health,MaxHealth);
-	Health = FMath::Clamp(Health, 0.0f, MaxHealth);
+	PlayerAttribute.Health = FMath::Clamp(PlayerAttribute.Health, 0.0f, PlayerAttribute.MaxHealth);
 }
 
 void AOAPlayerCharecter::UpdatePlayerSpeed()
@@ -185,7 +220,7 @@ void AOAPlayerCharecter::UpdatePlayerSpeed()
 
 void AOAPlayerCharecter::CheckGameState()
 {
-	if (Life <=0)
+	if (PlayerAttribute.Life <=0)
 	{
 		GameState =  EGameState::Lost;
 		UE_LOG(LogTemp, Warning, TEXT("Game Lost"))
@@ -205,8 +240,8 @@ void AOAPlayerCharecter::CheckGameState()
 void AOAPlayerCharecter::PrintDebugValues()
 {
 	GEngine->AddOnScreenDebugMessage(1,0.11f,FColor::Emerald,FString::Printf(TEXT("Score: %i"), Score));
-	GEngine->AddOnScreenDebugMessage(2,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Health: %.2f"), Health));
-	GEngine->AddOnScreenDebugMessage(3,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Life: %i"), Life));
+	GEngine->AddOnScreenDebugMessage(2,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Health: %.2f"), PlayerAttribute.Health));
+	GEngine->AddOnScreenDebugMessage(3,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Life: %i"), PlayerAttribute.Life));
 	GEngine->AddOnScreenDebugMessage(8,0.11f,FColor::Emerald,FString::Printf(TEXT("Player pos: %s"), *GetActorLocation().ToString()));
 	GEngine->AddOnScreenDebugMessage(9,0.11f,FColor::Emerald,FString::Printf(TEXT("Player sprinting: %i"), Sprinting));
 	GEngine->AddOnScreenDebugMessage(10,0.11f,FColor::Emerald,FString::Printf(TEXT("Orbs Left: %i"), AmountOfOrbsLeft));
@@ -283,7 +318,7 @@ void AOAPlayerCharecter::InputHealMax()
 	{
 		return;
 	}
-	HealPlayer(MaxHealth);
+	HealPlayer(PlayerAttribute.MaxHealth);
 }
 
 void AOAPlayerCharecter::InputDamge()
@@ -323,17 +358,27 @@ void AOAPlayerCharecter::InputStopSprint()
 	UpdatePlayerSpeed();
 }
 
-void AOAPlayerCharecter::UpdateOrb(TArray<AOrbAreanEnergyOrb*> ArrayOrbs)
+void AOAPlayerCharecter::UpdateOrb(Arb)
 {
-	for (AOrbAreanEnergyOrb* Orb : ArrayOrbs)
+	// TArray<AOrbAreanEnergyOrb> Array = ArrayOfOrbs;
+	TArray<AOrbAreanEnergyOrb*> OrbsToRemove;
+	for (AOrbAreanEnergyOrb* Orb : ArrayOfOrbs)
 	{
 		if (not IsValid(Orb))
 		{
+			// OrbsToRemove.Add(Orb);
 			ArrayOfOrbs.Remove(Orb);
 			AmountOfOrbsLeft--;
 			UE_LOG(LogTemp, Warning, TEXT("Orb Aray Length %d pointers"),ArrayOfOrbs.Num())
 		}
 	}
+	// To not modida looping array
+	// for (AOrbAreanEnergyOrb* Orb : OrbsToRemove)
+	// {
+	// 	ArrayOfOrbs.Remove(Orb);
+	// 	AmountOfOrbsLeft--;
+	// 	UE_LOG(LogTemp, Warning, TEXT("Orb Aray Length %d pointers"),ArrayOfOrbs.Num())
+	// }
 }
 
 
