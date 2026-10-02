@@ -16,9 +16,9 @@ struct FCharecterState
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere,Category="Health")
-	float Health = 100.0f;
+	float Health = 1000.0f;
 	UPROPERTY(EditAnywhere,Category="Health")
-	float MaxHealth = 100.0f;
+	float MaxHealth = 1000.0f;
 	UPROPERTY(EditAnywhere,Category="Health")
 	int32 Life = 3;
 	UPROPERTY(EditAnywhere,Category="Health")
@@ -30,24 +30,6 @@ struct FCharecterState
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float Damage = 10;
 };
-
-USTRUCT()
-struct FEnemyState
-{
-	GENERATED_BODY()
-	
-	UPROPERTY(EditAnywhere,Category="Ennemy|Stats|Health")
-	float Health = 200.0f;
-	UPROPERTY(EditAnywhere,Category="Ennemy|Stats|Health")
-	float MaxHealth = 100.0f;
-	
-	UPROPERTY(EditAnywhere,Category="Ennemy|Stats|Speed")
-	float BaseSpeed = 1200;
-	
-	UPROPERTY(EditAnywhere,Category="Ennemy|Stats|Speed")
-	float Damage = 10;
-};
-
 
 UENUM()
 enum class EGameState : uint8
@@ -116,8 +98,6 @@ public:
 	UPROPERTY(EditAnywhere,Category="Player")
 	FCharecterState PlayerAttribute;
 	
-	FEnemyState Enemy;
-	
 	UPROPERTY(EditAnywhere, Category = "Loot")
 	TArray<FLootDrop> ArrayLootDrop = {
 		FLootDrop("RustySword", 10, FLootDrop::Common),
@@ -162,11 +142,12 @@ public:
 	// Easy, Medium Harde
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
 	// Can break if there is duplicate keys
-	TMap<EGameDifficulty, float> DifficultySpeedMultiplier;
+	//TMap<EGameDifficulty, float> DifficultySpeedMultiplier;
+	TArray<float> DifficultySpeedMultiplier = {1.f, 0.75f, 0.5f};
 
 	
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
-	float SprintMultiplier = 2.f;
+	float SprintMultiplier = 1.f;
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
 	bool Sprinting = false;
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")

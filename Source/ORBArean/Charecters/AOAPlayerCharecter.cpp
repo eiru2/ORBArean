@@ -22,9 +22,9 @@ void AOAPlayerCharecter::BeginPlay()
 	Super::BeginPlay();
 	SetActorLabel( FString("dumbAss") );
 	
-	DifficultySpeedMultiplier.Add(EGameDifficulty::Easy, 1.0f);
-	DifficultySpeedMultiplier.Add(EGameDifficulty::Medium, 0.75f);
-	DifficultySpeedMultiplier.Add(EGameDifficulty::Hard, 0.5f);
+	// DifficultySpeedMultiplier.Add(EGameDifficulty::Easy, 1.0f);
+	// DifficultySpeedMultiplier.Add(EGameDifficulty::Medium, 0.75f);
+	// DifficultySpeedMultiplier.Add(EGameDifficulty::Hard, 0.5f);
 	
 
 	UpdatePlayerSpeed();
@@ -79,11 +79,11 @@ void AOAPlayerCharecter::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Biggest Number = %d"), Biggest)
 	
 	
-	UE_LOG(LogTemp, Warning, TEXT("---------------------------------------------") )
-	UE_LOG(LogTemp, Warning, TEXT("Enemy Health %f"), Enemy.Health )
-	UE_LOG(LogTemp, Warning, TEXT("Enemy Max Health %f"), Enemy.MaxHealth )
-	UE_LOG(LogTemp, Warning, TEXT("Enemy Base speed %f"), Enemy.BaseSpeed )
-	UE_LOG(LogTemp, Warning, TEXT("Enemy Damage %f"), Enemy.Damage )
+	// UE_LOG(LogTemp, Warning, TEXT("---------------------------------------------") )
+	// UE_LOG(LogTemp, Warning, TEXT("Enemy Health %f"), Enemy.Health )
+	// UE_LOG(LogTemp, Warning, TEXT("Enemy Max Health %f"), Enemy.MaxHealth )
+	// UE_LOG(LogTemp, Warning, TEXT("Enemy Base speed %f"), Enemy.BaseSpeed )
+	// UE_LOG(LogTemp, Warning, TEXT("Enemy Damage %f"), Enemy.Damage )
 	
 	UE_LOG(LogTemp, Warning, TEXT("---------------------------------------------") )
 	for (FLootDrop LootDrop : ArrayLootDrop)
@@ -217,7 +217,8 @@ void AOAPlayerCharecter::UpdatePlayerSpeed()
 		SpeedMultiplier += SprintMultiplier; 
 	}
 	
-	CurrentMovmentSpeed = PlayerAttribute.BaseSpeed*DifficultySpeedMultiplier.FindRef(GameDifficulty)*SpeedMultiplier;
+	//CurrentMovmentSpeed = PlayerAttribute.BaseSpeed*DifficultySpeedMultiplier.FindRef(GameDifficulty)*SpeedMultiplier;
+	CurrentMovmentSpeed = PlayerAttribute.BaseSpeed*DifficultySpeedMultiplier[static_cast<int>(GameDifficulty)]*SpeedMultiplier;
 	GetCharacterMovement() ->MaxWalkSpeed = CurrentMovmentSpeed;
 	Acceleration = CurrentMovmentSpeed*2;
 	GetCharacterMovement() ->MaxAcceleration = Acceleration;	
