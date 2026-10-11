@@ -2,10 +2,14 @@
 
 #pragma once
 
+#include "Components/WidgetComponent.h"
 #include "CoreMinimal.h"
-#include "ORBArean/Charecters/AOAPlayerCharecter.h"
+//#include "AOAPlayerCharecter.h"
 #include "GameFramework/Character.h"
+#include "ORBArean/widge/HealthBar.h"
 #include "OrbAreanaEnemy.generated.h"
+
+class AOAPlayerCharecter;
 
 USTRUCT()
 struct FEnemyState
@@ -24,6 +28,8 @@ struct FEnemyState
 	float Damage = 1.f;
 	UPROPERTY(EditAnywhere,Category="|Attack")
 	float Range = 25.f;
+	UPROPERTY(EditAnywhere,Category="|Attack")
+	float AtackkColdown = 1.f;
 };
 
 
@@ -49,18 +55,32 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	
+	
+	
 	UPROPERTY(EditAnywhere,Category="Enemy|Stats")
 	FEnemyState EnemyAttribut;
 	
 	UPROPERTY(EditAnywhere,Category="Enemy|Stats")
 	AOAPlayerCharecter* PlayerCharacter;
 	
+	UPROPERTY(EditAnywhere,Category="Enemy|Timer")
+	float Timer = 0;
+	
+
+	/** Select your WBP_HealthBar here in the Editor */
+	UPROPERTY(VisibleAnywhere, Category = "UI")
+	UWidgetComponent* HealthWidgetComp;
+ 
+	/** Reference to the instance so we can update it */
+	UPROPERTY()
+	UHealthBar* HealthBarInstance;
 	
 
 
 	
 
-	void DealDamgeToPlayer(float DamgeAmount, FVector EnemyPos,FVector PlayerPos);
+	bool DealDamgeToPlayer(float DamgeAmount, FVector EnemyPos,FVector PlayerPos);
+	void DamgeRecive(float DamgeAmount);
 	void Heal(float HealAmount);
 	void Move(FVector EnemyPos,FVector PlayerPos);
 	

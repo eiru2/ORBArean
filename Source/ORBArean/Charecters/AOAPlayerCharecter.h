@@ -4,11 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
 #include "ORBArean/Object/OrbAreanEnergyOrb.h"
+//#include "OrbAreanaEnemy.h"
 //#include "../../../../../../../Program Files/Epic Games/UE_5.8/Engine/Plugins/Media/AjaMedia/Source/AjaMedia/Private/Shared/AjaMediaAllowPlatformTypes.h"
 #include "Splines/SplineMath.h"
 #include "EnhancedInputSubsystems.h"
 #include "AOAPlayerCharecter.generated.h"
+
+
+class AOrbAreanaEnemy;
 
 USTRUCT(meta=(DisableSplitPin))
 struct FCharecterState
@@ -29,6 +34,9 @@ struct FCharecterState
 	
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float Damage = 10;
+	
+	UPROPERTY(EditAnywhere,Category="Damage")
+	float Range = 100;
 };
 
 UENUM()
@@ -124,7 +132,10 @@ public:
 	UInputAction* HealActionMax;
 	
 	UPROPERTY(EditDefaultsOnly,Category="Input")
-	UInputAction* DamageAction;
+	UInputAction* DamageActionTesst;
+	
+	UPROPERTY(EditDefaultsOnly,Category="Input")
+	UInputAction* DealDamageAction;
 	
 	UPROPERTY(EditDefaultsOnly,Category="Input")
 	UInputAction* AddScoreAction;
@@ -145,6 +156,8 @@ public:
 	//TMap<EGameDifficulty, float> DifficultySpeedMultiplier;
 	TArray<float> DifficultySpeedMultiplier = {1.f, 0.75f, 0.5f};
 
+
+	
 	
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
 	float SprintMultiplier = 1.f;
@@ -184,10 +197,13 @@ public:
 	
 	TArray<FString> ArrayOrbsNames;
 	
+	TArray<AOrbAreanaEnemy*> ArraOfEnemy;
+	
 
 	
 	void AddScore(int32 InAmount);
 	void DamgePlayer(float InAmount);
+	void DealDamge(AOrbAreanaEnemy*);
 	void LoseLife();
 	void HealPlayer(float InAmount);
 	void UpdatePlayerSpeed();
@@ -203,7 +219,8 @@ public:
 	//Input Function
 	void InputHeal();
 	void InputHealMax();
-	void InputDamge();
+	void InputReciveDamge();
+	void InputDealDamge();
 	void InputAddScore();
 	
 	void MovePlayer(const FInputActionValue& Value);
@@ -211,6 +228,11 @@ public:
 	void InputStopSprint();
 	
 	void UpdateOrb(AOrbAreanEnergyOrb* Orb);
+	
+	// Setup funksjon
+	TArray<AOrbAreanaEnemy*> GetEnemCharecter();
+	
+	
 	
 	//void PlayerControlss();
 	//void MovePlayerUnreal();

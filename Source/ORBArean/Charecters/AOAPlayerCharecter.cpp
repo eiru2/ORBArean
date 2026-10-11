@@ -2,8 +2,11 @@
 
 
 #include "AOAPlayerCharecter.h"
+#include "OrbAreanaEnemy.h"
 
 #include "EnhancedInputComponent.h"
+#include "MeshPaintVisualize.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Microsoft/AllowMicrosoftPlatformTypes.h"
@@ -21,6 +24,7 @@ void AOAPlayerCharecter::BeginPlay()
 {
 	Super::BeginPlay();
 	SetActorLabel( FString("dumbAss") );
+
 	
 	// DifficultySpeedMultiplier.Add(EGameDifficulty::Easy, 1.0f);
 	// DifficultySpeedMultiplier.Add(EGameDifficulty::Medium, 0.75f);
@@ -39,6 +43,8 @@ void AOAPlayerCharecter::BeginPlay()
 			}
 		}
 	}
+
+	ArraOfEnemy = GetEnemCharecter();
 	
 	TArray<AActor*> EnergyOrbs;
 
@@ -116,9 +122,14 @@ void AOAPlayerCharecter::BeginPlay()
 void AOAPlayerCharecter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	// UpdateOrb(ArrayOfOrbs);
 	PrintDebugValues();
 	CheckGameState();
+	int32 i = 0;
+
+	
+	
 }
 // Called to bind functionality to input
 void AOAPlayerCharecter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -133,7 +144,9 @@ void AOAPlayerCharecter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AOAPlayerCharecter::InputStopSprint);
 
-	EnhancedInputComponent->BindAction(DamageAction, ETriggerEvent::Triggered, this, &AOAPlayerCharecter::InputDamge);
+	EnhancedInputComponent->BindAction(DamageActionTesst, ETriggerEvent::Triggered, this, &AOAPlayerCharecter::InputReciveDamge);
+	
+	EnhancedInputComponent->BindAction(DealDamageAction,ETriggerEvent::Triggered, this, &AOAPlayerCharecter::InputDealDamge);
 
 	EnhancedInputComponent->BindAction(HealAction, ETriggerEvent::Triggered, this, &AOAPlayerCharecter::InputHeal);
 	
@@ -158,6 +171,11 @@ void AOAPlayerCharecter::DamgePlayer(float InAmount)
 	}
 	//Health = FMath::Min(Health,MaxHealth);
 	PlayerAttribute.Health = FMath::Clamp(PlayerAttribute.Health, 0.0f, PlayerAttribute.MaxHealth);
+}
+
+void AOAPlayerCharecter::DealDamge(AOrbAreanaEnemy*)
+{
+	
 }
 
 void AOAPlayerCharecter::LoseLife()
@@ -321,7 +339,7 @@ void AOAPlayerCharecter::InputHealMax()
 	HealPlayer(PlayerAttribute.MaxHealth);
 }
 
-void AOAPlayerCharecter::InputDamge()
+void AOAPlayerCharecter::InputReciveDamge()
 {
 	if (GameState != EGameState::Playing)
 	{
@@ -329,6 +347,42 @@ void AOAPlayerCharecter::InputDamge()
 	}
 	DamgePlayer(TempDamge);
 }
+
+void AOAPlayerCharecter::InputDealDamge()
+{
+	if (GameState != EGameState::Playing)
+	{
+		return;
+	}
+	
+	TArray<AOrbAreanaEnemy*> ToRemoveList;
+	
+	FVector PlayerLoctionVector = GetActorLocation();
+	float PlayerRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
+	DrawDebugSphere(GetWorld(),PlayerLoctionVector,PlayerRadius+PlayerAttribute.Range,10,FColor(255,0,0));
+	for (AOrbAreanaEnemy* Enemy : ArraOfEnemy)
+	{
+		FVector EnemyPos = Enemy->GetActorLocation();
+		float EnemySize = Enemy->GetCapsuleComponent()->GetScaledCapsuleRadius();
+		if (FVector::Dist2D(PlayerLoctionVector,EnemyPos) < PlayerAttribute.Range+PlayerRadius+ EnemySize)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Enem,y Health before %f"), Enemy->EnemyAttribut.Health)
+			Enemy->DamgeRecive(PlayerAttribute.Damage);
+			UE_LOG(LogTemp, Warning, TEXT("Enem,y Health After %f"), Enemy->EnemyAttribut.Health)
+			if (Enemy->EnemyAttribut.Health <= 0)
+			{
+				ToRemoveList.Add(Enemy);
+			}
+		}
+	}
+	
+	for (AOrbAreanaEnemy* Enemy : ToRemoveList)
+	{
+		ArraOfEnemy.Remove(Enemy);
+		Enemy->Destroy();
+	}
+}
+
 void AOAPlayerCharecter::InputAddScore()
 {
 	if (GameState != EGameState::Playing)
@@ -367,6 +421,24 @@ void AOAPlayerCharecter::UpdateOrb(AOrbAreanEnergyOrb* Orb)
 		UE_LOG(LogTemp, Warning, TEXT("Orb Aray Length %d pointers"),ArrayOfOrbs.Num())
 		
 	}
+}
+
+// Setupp
+TArray<AOrbAreanaEnemy*> AOAPlayerCharecter::GetEnemCharecter()
+{
+	TArray<AActor*> EnemyCharecter;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(),AOrbAreanaEnemy::StaticClass(),EnemyCharecter);
+	
+	TArray<AOrbAreanaEnemy*> RerunList;
+	for (AActor* Enemy : EnemyCharecter)
+	{
+		RerunList.Add(Cast<AOrbAreanaEnemy>(Enemy));
+		UE_LOG(LogTemp, Warning, TEXT("Enemy %.f"),Cast<AOrbAreanaEnemy>(Enemy)->EnemyAttribut.Health)
+
+	}
+
+	return RerunList;
 }
 
 

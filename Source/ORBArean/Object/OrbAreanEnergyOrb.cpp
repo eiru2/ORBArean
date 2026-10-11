@@ -5,6 +5,7 @@
 #include "ORBArean/Charecters/AOAPlayerCharecter.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "ORBArean/widge/HealthBar.h"
 
 
 // Sets default values
@@ -43,6 +44,7 @@ void AOrbAreanEnergyOrb::Tick(float DeltaTime)
 		}
 	}
 	
+
 }
 
 void AOrbAreanEnergyOrb::OrbPickedUp(int32 InPointValue)
