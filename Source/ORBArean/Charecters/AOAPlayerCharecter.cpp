@@ -157,6 +157,7 @@ void AOAPlayerCharecter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 }
 
+// Damge
 void AOAPlayerCharecter::DamgePlayer(float InAmount)
 {
 	
@@ -178,41 +179,17 @@ void AOAPlayerCharecter::DealDamge(AOrbAreanaEnemy*)
 	
 }
 
-void AOAPlayerCharecter::LoseLife()
+// Player Movment
+void AOAPlayerCharecter::MovePlayer(const FInputActionValue& Value)
 {
-	PlayerAttribute.Life -=1;
-	PlayerAttribute.Life = FMath::Clamp(PlayerAttribute.Life, 0.0f, PlayerAttribute.MaxLife);
-	PlayerAttribute.Health = PlayerAttribute.MaxHealth;
-	if (PlayerAttribute.Life == 0)
+	if (GameState != EGameState::Playing)
 	{
-		GameState = EGameState::Lost;
+		return;
 	}
-		
-}
+	FVector2D MovementValue = Value.Get<FVector2D>();
 
-void AOAPlayerCharecter::AddScore(int32 InAmount)
-{
-	Score +=InAmount;
-	if (Score >= 1000)
-	{
-		GameDifficulty = EGameDifficulty::Hard;
-	}
-	else if (Score > 500 and Score < 1000)
-	{
-		GameDifficulty = EGameDifficulty::Medium;
-	}
-	else if (Score <= 500)
-	{
-		GameDifficulty = EGameDifficulty::Easy;
-	}
-	UpdatePlayerSpeed();
-}
-
-void AOAPlayerCharecter::HealPlayer(float InAmount)
-{
-	PlayerAttribute.Health += InAmount;
-	//Health = FMath::Min(Health,MaxHealth);
-	PlayerAttribute.Health = FMath::Clamp(PlayerAttribute.Health, 0.0f, PlayerAttribute.MaxHealth);
+	AddMovementInput(GetActorForwardVector(), MovementValue.X);
+	AddMovementInput(GetActorRightVector(), MovementValue.Y);
 }
 
 void AOAPlayerCharecter::UpdatePlayerSpeed()
@@ -242,6 +219,28 @@ void AOAPlayerCharecter::UpdatePlayerSpeed()
 	GetCharacterMovement() ->MaxAcceleration = Acceleration;	
 }
 
+// Health System
+void AOAPlayerCharecter::HealPlayer(float InAmount)
+{
+	PlayerAttribute.Health += InAmount;
+	//Health = FMath::Min(Health,MaxHealth);
+	PlayerAttribute.Health = FMath::Clamp(PlayerAttribute.Health, 0.0f, PlayerAttribute.MaxHealth);
+}
+
+void AOAPlayerCharecter::LoseLife()
+{
+	PlayerAttribute.Life -=1;
+	PlayerAttribute.Life = FMath::Clamp(PlayerAttribute.Life, 0.0f, PlayerAttribute.MaxLife);
+	PlayerAttribute.Health = PlayerAttribute.MaxHealth;
+	if (PlayerAttribute.Life == 0)
+	{
+		GameState = EGameState::Lost;
+	}
+		
+}
+
+
+// System
 void AOAPlayerCharecter::CheckGameState()
 {
 	if (PlayerAttribute.Life <=0)
@@ -261,62 +260,22 @@ void AOAPlayerCharecter::CheckGameState()
 	
 }
 
-void AOAPlayerCharecter::PrintDebugValues()
+void AOAPlayerCharecter::AddScore(int32 InAmount)
 {
-	GEngine->AddOnScreenDebugMessage(1,0.11f,FColor::Emerald,FString::Printf(TEXT("------------------------Player State---------------------")));
-	GEngine->AddOnScreenDebugMessage(2,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Health: %.2f"), PlayerAttribute.Health));
-	GEngine->AddOnScreenDebugMessage(3,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Life: %i"), PlayerAttribute.Life));
-	
-	GEngine->AddOnScreenDebugMessage(4,0.11f,FColor::Red,FString::Printf(TEXT("------------------------Player Speed---------------------")));
-	GEngine->AddOnScreenDebugMessage(5,0.11f,FColor::Red,FString::Printf(TEXT("Player pos: %s"), *GetActorLocation().ToString()));
-	GEngine->AddOnScreenDebugMessage(6,0.11f,FColor::Red,FString::Printf(TEXT("Player sprinting: %i"), Sprinting));
-	if (CurrentMovmentSpeed > 2000.0f)
+	Score +=InAmount;
+	if (Score >= 1000)
 	{
-		
-		GEngine->AddOnScreenDebugMessage(7,0.11f,FColor::Red,FString::Printf(TEXT("Player is Sonic!! Movement Speed: %.2f"), CurrentMovmentSpeed));
+		GameDifficulty = EGameDifficulty::Hard;
 	}
-	else
+	else if (Score > 500 and Score < 1000)
 	{
-		GEngine->AddOnScreenDebugMessage(7,0.11f,FColor::Red,FString::Printf(TEXT("Player Movement Speed: %.2f"), CurrentMovmentSpeed));
+		GameDifficulty = EGameDifficulty::Medium;
 	}
-	
-	GEngine->AddOnScreenDebugMessage(8,0.11f,FColor::Yellow,FString::Printf(TEXT("------------------------Game Info---------------------")));
-	GEngine->AddOnScreenDebugMessage(9,0.11f,FColor::Yellow,FString::Printf(TEXT("Score: %i"), Score));
-	GEngine->AddOnScreenDebugMessage(10,0.11f,FColor::Yellow,FString::Printf(TEXT("Orbs Left: %i"), AmountOfOrbsLeft));
-	switch(GameState){
-		case  EGameState::Playing:
-			GEngine->AddOnScreenDebugMessage(11,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Playing: %i"), GameState));
-			break;
-		case  EGameState::Won:
-			GEngine->AddOnScreenDebugMessage(11,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Won %i"), GameState));
-			break;
-		case  EGameState::Lost:
-			GEngine->AddOnScreenDebugMessage(11,0.11f,FColor::Yellow,FString::Printf(TEXT("Game lost %i"), GameState));
-			break;
-	}
-	switch(GameDifficulty){
-		case EGameDifficulty::Easy:
-			GEngine->AddOnScreenDebugMessage(12,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Difficulty Esay: %i"), GameDifficulty));
-			break;
-		case EGameDifficulty::Medium:
-			GEngine->AddOnScreenDebugMessage(12,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Difficulty Medium: %i"), GameDifficulty));
-			break;
-		case EGameDifficulty::Hard:
-			GEngine->AddOnScreenDebugMessage(12,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Difficulty Hard: %i"), GameDifficulty));
-			break;
-	}
-}
-
-void AOAPlayerCharecter::MovePlayer(const FInputActionValue& Value)
-{
-	if (GameState != EGameState::Playing)
+	else if (Score <= 500)
 	{
-		return;
+		GameDifficulty = EGameDifficulty::Easy;
 	}
-	FVector2D MovementValue = Value.Get<FVector2D>();
-
-	AddMovementInput(GetActorForwardVector(), MovementValue.X);
-	AddMovementInput(GetActorRightVector(), MovementValue.Y);
+	UpdatePlayerSpeed();
 }
 
 // Input Calls
@@ -359,7 +318,7 @@ void AOAPlayerCharecter::InputDealDamge()
 	
 	FVector PlayerLoctionVector = GetActorLocation();
 	float PlayerRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
-	DrawDebugSphere(GetWorld(),PlayerLoctionVector,PlayerRadius+PlayerAttribute.Range,10,FColor(255,0,0));
+	DrawDebugSphere(GetWorld(),PlayerLoctionVector,PlayerRadius+PlayerAttribute.Range,10,FColor(255,0,0),false, 1);
 	for (AOrbAreanaEnemy* Enemy : ArraOfEnemy)
 	{
 		FVector EnemyPos = Enemy->GetActorLocation();
@@ -441,6 +400,52 @@ TArray<AOrbAreanaEnemy*> AOAPlayerCharecter::GetEnemCharecter()
 	return RerunList;
 }
 
+// Debug
+void AOAPlayerCharecter::PrintDebugValues()
+{
+	GEngine->AddOnScreenDebugMessage(1,0.11f,FColor::Emerald,FString::Printf(TEXT("------------------------Player State---------------------")));
+	GEngine->AddOnScreenDebugMessage(2,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Health: %.2f"), PlayerAttribute.Health));
+	GEngine->AddOnScreenDebugMessage(3,0.11f,FColor::Emerald,FString::Printf(TEXT("Player Life: %i"), PlayerAttribute.Life));
+	
+	GEngine->AddOnScreenDebugMessage(4,0.11f,FColor::Red,FString::Printf(TEXT("------------------------Player Speed---------------------")));
+	GEngine->AddOnScreenDebugMessage(5,0.11f,FColor::Red,FString::Printf(TEXT("Player pos: %s"), *GetActorLocation().ToString()));
+	GEngine->AddOnScreenDebugMessage(6,0.11f,FColor::Red,FString::Printf(TEXT("Player sprinting: %i"), Sprinting));
+	if (CurrentMovmentSpeed > 2000.0f)
+	{
+		
+		GEngine->AddOnScreenDebugMessage(7,0.11f,FColor::Red,FString::Printf(TEXT("Player is Sonic!! Movement Speed: %.2f"), CurrentMovmentSpeed));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(7,0.11f,FColor::Red,FString::Printf(TEXT("Player Movement Speed: %.2f"), CurrentMovmentSpeed));
+	}
+	
+	GEngine->AddOnScreenDebugMessage(8,0.11f,FColor::Yellow,FString::Printf(TEXT("------------------------Game Info---------------------")));
+	GEngine->AddOnScreenDebugMessage(9,0.11f,FColor::Yellow,FString::Printf(TEXT("Score: %i"), Score));
+	GEngine->AddOnScreenDebugMessage(10,0.11f,FColor::Yellow,FString::Printf(TEXT("Orbs Left: %i"), AmountOfOrbsLeft));
+	switch(GameState){
+		case  EGameState::Playing:
+			GEngine->AddOnScreenDebugMessage(11,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Playing: %i"), GameState));
+			break;
+		case  EGameState::Won:
+			GEngine->AddOnScreenDebugMessage(11,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Won %i"), GameState));
+			break;
+		case  EGameState::Lost:
+			GEngine->AddOnScreenDebugMessage(11,0.11f,FColor::Yellow,FString::Printf(TEXT("Game lost %i"), GameState));
+			break;
+	}
+	switch(GameDifficulty){
+		case EGameDifficulty::Easy:
+			GEngine->AddOnScreenDebugMessage(12,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Difficulty Esay: %i"), GameDifficulty));
+			break;
+		case EGameDifficulty::Medium:
+			GEngine->AddOnScreenDebugMessage(12,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Difficulty Medium: %i"), GameDifficulty));
+			break;
+		case EGameDifficulty::Hard:
+			GEngine->AddOnScreenDebugMessage(12,0.11f,FColor::Yellow,FString::Printf(TEXT("Game Difficulty Hard: %i"), GameDifficulty));
+			break;
+	}
+}
 
 // void AOAPlayerCharecter::MovePlayer(float DeltaTime)
 // {

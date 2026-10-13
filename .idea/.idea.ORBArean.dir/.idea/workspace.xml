@@ -14,30 +14,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62b4b94c-318c-4b0c-a6cf-4936f978aa3d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/ORBArean/widge/HealthBar.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/ORBArean/widge/HealthBar.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ORBArean.dir/.idea/shelf/Uncommitted_changes_before_Update_at_30_09_2026_08_15_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ORBArean.dir/.idea/shelf/Uncommitted_changes_before_Update_at_30_09_2026_08_15__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ORBArean.dir/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ORBArean.dir/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ORBArean.dir/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ORBArean.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ORBArean.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ORBArean/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ORBArean/.idea/projectSettingsUpdater.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ORBArean/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Automation_ORBArean.slnx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Charecters/MyOAPlayerCharecterBP.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Charecters/MyOAPlayerCharecterBP.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Charecters/MyOrbAreanaEnemy_Bp.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Charecters/MyOrbAreanaEnemy_Bp.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ControllerInput/IMC_Player.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ControllerInput/IMC_Player.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Level/MainLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Level/MainLevel.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ORBArean.slnx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/widge/HealthBar_Bp.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/widge/HealthBar_Bp.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ORBArean/Charecters/AOAPlayerCharecter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/Charecters/AOAPlayerCharecter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ORBArean/Charecters/AOAPlayerCharecter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/Charecters/AOAPlayerCharecter.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ORBArean/Charecters/OrbAreanaEnemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/Charecters/OrbAreanaEnemy.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ORBArean/Charecters/OrbAreanaEnemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/Charecters/OrbAreanaEnemy.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ORBArean/ORBArean.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/ORBArean.Build.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ORBArean/ORBArean.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/ORBArean.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ORBArean/ORBArean.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/ORBArean.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ORBArean/Object/OrbAreanEnergyOrb.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ORBArean/Object/OrbAreanEnergyOrb.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,17 +43,26 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/eiru2/ORBArean.git&quot;,
-    &quot;accountId&quot;: &quot;b7d104bb-a5ee-4b44-b0eb-1be01a4f78e7&quot;
+    &quot;accountId&quot;: &quot;9f2a5c66-a9d5-49a8-9b04-9269342a82b4&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/../../UE_5.8/Engine/Source/Runtime/Core/Public/Internationalization/Text.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../UE_5.8/Engine/Source/Runtime/Engine/Classes/Kismet/GameplayStatics.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../UE_5.8/Engine/Source/Runtime/GeometryCore/Public/Splines/SplineInterfaces.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Core/Public/CoreMinimal.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Core/Public/Delegates/DelegateSignatureImpl.inl" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Core/Public/Math/MathFwd.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Core/Public/Math/Vector.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/CoreUObject/Public/UObject/Class.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Engine/Classes/Camera/CameraComponent.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Engine/Classes/Components/CapsuleComponent.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Engine/Classes/Engine/NetSerialization.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Engine/Private/Character.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Engine/Private/PrimitiveDrawingUtils.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Engine/Public/PrimitiveDrawingUtils.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Chaos/TaperedCapsule.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/Chaos/Public/Framework/ThreadCheckedData.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Source/Runtime/Experimental/ChaosCore/Public/Chaos/Core.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ORBArean/Charecters/OrbAreanaEnemy.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/ORBArean/ORBArean.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/ORBArean/widge/HealthBar.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/ORBArean/widge/HealthBar.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -93,7 +86,7 @@
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;git.auto.fetch.suggestion.counter&quot;: &quot;3&quot;,
+    &quot;git.auto.fetch.suggestion.counter&quot;: &quot;1&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -102,7 +95,7 @@
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;python.packages.toolwindow.project.migrated.to.right.top.v2&quot;: &quot;true&quot;,
     &quot;rider.unittesting.toolwindow.stripe.button.shown&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion.popup&quot;
   }
 }</component>
   <component name="RunManager">
@@ -111,10 +104,10 @@
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../UE_5.8/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;E:\programering\unreal\games\ORBAreana\ORBArean.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Binaries/Win64/UnrealEditor-Win64-DebugGame.exe" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\programering\Game\unreal\ORBArean\ORBArean.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../UE_5.8" />
+        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -127,7 +120,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/ORBArean-Win64-DebugGame.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../UE_5.8" />
+        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -137,10 +130,10 @@
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../UE_5.8/Engine/Binaries/Win64/UnrealEditor.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;E:\programering\unreal\games\ORBAreana\ORBArean.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8/Engine/Binaries/Win64/UnrealEditor.exe" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\programering\Game\unreal\ORBArean\ORBArean.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../UE_5.8" />
+        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -153,7 +146,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/ORBArean.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../UE_5.8" />
+        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -166,7 +159,7 @@
         <option name="EXECUTABLE_PATH" value="$PROJECT_DIR$/Binaries/Win64/ORBArean-Win64-Shipping.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../UE_5.8" />
+        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../../../Program Files/Epic Games/UE_5.8" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
@@ -243,6 +236,11 @@
           <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="3" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Source/ORBArean/Charecters/AOAPlayerCharecter.cpp</url>
+          <line>552</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

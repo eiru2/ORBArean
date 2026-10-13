@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "OrbAreanaEnemy.h"
 #include "AOAPlayerCharecter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-#include "OrbAreanaEnemy.h"
 
 // Sets default values
 AOrbAreanaEnemy::AOrbAreanaEnemy()
@@ -57,25 +57,34 @@ void AOrbAreanaEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	Timer +=DeltaTime;
-	FVector EnemyLoction = GetActorLocation();
+	EnemyPos = GetActorLocation();
 	FVector PlayerLocation = PlayerCharacter->GetActorLocation();
 	
+	UpdateAI(DeltaTime,PlayerLocation);
 	if (HealthBarInstance)
 	{
-
 		HealthBarInstance->Update(EnemyAttribut.Health, EnemyAttribut.MaxHealth);
 	}
 
 	if (Timer > EnemyAttribut.AtackkColdown)
 	{
-		Heal(100);
-		if (DealDamgeToPlayer(EnemyAttribut.Damage, EnemyLoction, PlayerLocation))
+		if (DealDamgeToPlayer(EnemyAttribut.Damage, PlayerLocation))
 		{
+			Heal(EnemyAttribut.Damage);
 			Timer = 0;
 		}
 	}
-	// Move(EnemyLoction,PlayerLocation);
-	PrintDebugValues();
+	if (bSeePlayer)
+	{
+		Move(PlayerLocation);
+		
+	}
+	
+	if (bDrawDebug)
+	{
+		DrawDebug();
+		PrintDebugValues();
+	}
 	
 
 }
@@ -88,16 +97,20 @@ void AOrbAreanaEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
-
-bool AOrbAreanaEnemy::DealDamgeToPlayer(float DamgeAmount, FVector EnemyPos,FVector PlayerPos)
+// Ai Behiver
+bool AOrbAreanaEnemy::DealDamgeToPlayer(float DamgeAmount,FVector PlayerPos)
 {
+	if (not bSeePlayer)
+	{
+		return false;
+	}
 	if (IsValid(PlayerCharacter))
 	{
 		//FVector PlayerLocation = PlayerCharacter->GetActorLocation();
-		float PlayerSize = PlayerCharacter->GetCapsuleComponent()->GetScaledCapsuleRadius();
+		// float PlayerSize = PlayerCharacter->GetCapsuleComponent()->GetScaledCapsuleRadius();
 		float EnemySize = GetCapsuleComponent()->GetScaledCapsuleRadius();
 		//FVector EnemyLoction = GetActorLocation();
-		if(FVector::DistXY(EnemyPos, PlayerPos) <= EnemyAttribut.Range+PlayerSize+EnemySize) //
+		if(FVector::DistXY(EnemyPos, PlayerPos) <= EnemyAttribut.Range+EnemySize) //
 		{
 			//Cast<AOAPlayerCharecter>(PlayerCharacter)->DamgePlayer(DamgeAmount);
 			PlayerCharacter->DamgePlayer(DamgeAmount);
@@ -114,6 +127,76 @@ void AOrbAreanaEnemy::Heal(float HealAmount)
 	EnemyAttribut.Health = FMath::Clamp(EnemyAttribut.Health, 0.0f, EnemyAttribut.MaxHealth);
 }
 
+void AOrbAreanaEnemy::Move(FVector PlayerPos)
+{
+	// float X = PlayerPos.X - EnemyPos.X;
+	// float Y = PlayerPos.Y- EnemyPos.Y;
+	//
+	// FVector2D Movment = {X,Y};
+	// Movment.Normalize();
+	//
+	// AddMovementInput(GetActorForwardVector(), Movment.X);
+	// AddMovementInput(GetActorRightVector(), Movment.Y);
+	
+	float EnemySize = GetCapsuleComponent()->GetScaledCapsuleRadius();
+
+	if(FVector::DistXY(EnemyPos, PlayerPos) <= EnemyAttribut.Range+EnemySize-5)
+	{
+		return;
+	}
+	AddMovementInput(GetActorForwardVector(),EnemyAttribut.BaseSpeed);
+}
+
+void AOrbAreanaEnemy::UpdateAI(float DeltaTime, FVector PlayerPos)
+{
+	FVector VectorToPlayer = PlayerPos - EnemyPos;
+	VectorToPlayer.Z = 0.f;
+	FVector ToPlayerDiraction = VectorToPlayer.GetSafeNormal();
+	
+	FVector EnemyForwardVector = GetActorForwardVector();
+	EnemyForwardVector.Z = 0.f;
+	EnemyForwardVector = EnemyForwardVector.GetSafeNormal();
+	
+	// Dot prudukt
+	DotPrukuktValue = FVector::DotProduct(EnemyForwardVector,ToPlayerDiraction);
+	bSeePlayer = DotPrukuktValue > DotProduktSeePlayer;
+	
+	if (not bSeePlayer)
+	{
+		DebugColor = {255,0,0};
+		return;
+	}
+	// Cross
+	CrossPrudoktValue = FVector::CrossProduct(EnemyForwardVector,ToPlayerDiraction);
+	DebugColor = {0,255,0};
+	if (DotPrukuktValue > TresholdDotPrudukt)
+	{
+		return;
+	}
+	float TurnDiraction = 1.f;
+	
+	if (CrossPrudoktValue.Z < 0)
+	{
+		TurnDiraction = -1.f;
+	}
+	if (CrossPrudoktValue.Z > 0)
+	{
+		TurnDiraction = 1.f;
+	}
+	
+	float TurnAmunt = TurnDiraction*TurnSpeed*DeltaTime;
+	
+	AddActorLocalRotation(FRotator(0,TurnAmunt,0));
+	
+}
+
+// Funksjns 
+void AOrbAreanaEnemy::DamgeRecive(float DamgeAmount)
+{
+	EnemyAttribut.Health -=DamgeAmount;
+}
+
+// Debug
 void AOrbAreanaEnemy::PrintDebugValues()
 {
 	GEngine->AddOnScreenDebugMessage(14,0.11f,FColor::Emerald,FString::Printf(TEXT("------------------------Enemy State---------------------")));
@@ -124,20 +207,8 @@ void AOrbAreanaEnemy::PrintDebugValues()
 	GEngine->AddOnScreenDebugMessage(18,0.11f,FColor::Emerald,FString::Printf(TEXT("speed: %f"),EnemyAttribut.BaseSpeed));
 }
 
-void AOrbAreanaEnemy::Move(FVector EnemyPos,FVector PlayerPos)
+void AOrbAreanaEnemy::DrawDebug()
 {
-	float X = PlayerPos.X - EnemyPos.X;
-	float Y = PlayerPos.Y- EnemyPos.Y;
-	
-	FVector2D Movment = {X,Y};
-	Movment.Normalize();
-	
-	AddMovementInput(GetActorForwardVector(), Movment.X);
-	AddMovementInput(GetActorRightVector(), Movment.Y);
-}
-
-void AOrbAreanaEnemy::DamgeRecive(float DamgeAmount)
-{
-	EnemyAttribut.Health -=DamgeAmount;
-	
+	DrawDebugSphere(GetWorld(),EnemyPos,EnemyAttribut.Range,10,DebugColor);
+	DrawDebugDirectionalArrow(GetWorld(), EnemyPos, EnemyPos + GetActorForwardVector() * 150.f, 30.f, DebugColor, false, 0.f, 0, 3.f);
 }

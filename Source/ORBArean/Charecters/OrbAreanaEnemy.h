@@ -75,19 +75,55 @@ public:
 	UPROPERTY()
 	UHealthBar* HealthBarInstance;
 	
-
+	
+	// Enemy info
+	FVector EnemyPos;
+	
+	// Ai Varibale
+	UPROPERTY(EditAnywhere,Category="Enemy|AI", meta = (ClampMax=1.f,ClampMin=-1.f))
+	float DotProduktSeePlayer =0.4;
+	
+	UPROPERTY(VisibleAnywhere,Category="Enemy|AI", meta = (ClampMax=1.f,ClampMin=-1.f))
+	float DotPrukuktValue = 0.f;
+	
+	UPROPERTY(VisibleAnywhere,Category="Enemy|AI", meta = (ClampMax=1.f,ClampMin=-1.f))
+	float CrossProdokkSide = 0.f;
+	
+	UPROPERTY(EditAnywhere,Category="Enemy|AI")
+	float TresholdDotPrudukt = 0.99;
+	
+	UPROPERTY(VisibleAnywhere, Category="Enemy|AI")
+	FVector CrossPrudoktValue = FVector(1.f,1.f,1.f);
+	
+	UPROPERTY(EditAnywhere,Category="Enemy|AI")
+	bool bSeePlayer = false;
+	
+	UPROPERTY(EditAnywhere, Category="Enemy|AI")
+	float TurnSpeed = 180.f;
+	
+	UPROPERTY(EditAnywhere,Category="Enemy|AI")
+	bool bRequiedVisonToTurn = true;
+	
+	// Debug
+	UPROPERTY(EditAnywhere,Category="Enemy|Debug")
+	bool bDrawDebug = true;
+	
+	UPROPERTY(VisibleAnywhere, Category="Enemy|Debug")
+	FColor DebugColor = {255,0,0};
 
 	
 
-	bool DealDamgeToPlayer(float DamgeAmount, FVector EnemyPos,FVector PlayerPos);
+	bool DealDamgeToPlayer(float DamgeAmount,FVector PlayerPos);
 	void DamgeRecive(float DamgeAmount);
 	void Heal(float HealAmount);
-	void Move(FVector EnemyPos,FVector PlayerPos);
+	void Move(FVector PlayerPos);
 	
+	// AI Funk
+	void UpdateAI(float DeltaTime, FVector PlayerPo);
 	
-	
+	// Debug Funk
 	void PrintDebugValues();
-	
+	void DrawDebug();
 	
 	
 };
