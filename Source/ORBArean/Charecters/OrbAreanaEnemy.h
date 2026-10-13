@@ -55,7 +55,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	
-	
+	UPROPERTY(EditAnywhere,Category="Enemy|Info")
+	FString EnemyName;
 	
 	UPROPERTY(EditAnywhere,Category="Enemy|Stats")
 	FEnemyState EnemyAttribut;
@@ -94,6 +95,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category="Enemy|AI")
 	FVector CrossPrudoktValue = FVector(1.f,1.f,1.f);
+	
+	UPROPERTY(EditAnywhere,Category="Enemy|AI")
+	float MaxVeiwingRange = 500;
 	
 	UPROPERTY(EditAnywhere,Category="Enemy|AI")
 	bool bSeePlayer = false;

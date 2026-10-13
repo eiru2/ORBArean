@@ -39,6 +39,7 @@ void AOrbAreanaEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	GetCharacterMovement() ->MaxWalkSpeed = EnemyAttribut.BaseSpeed;
+	SetActorLabel( EnemyName );
 	
 	//PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(),0);
 
@@ -107,10 +108,10 @@ bool AOrbAreanaEnemy::DealDamgeToPlayer(float DamgeAmount,FVector PlayerPos)
 	if (IsValid(PlayerCharacter))
 	{
 		//FVector PlayerLocation = PlayerCharacter->GetActorLocation();
-		// float PlayerSize = PlayerCharacter->GetCapsuleComponent()->GetScaledCapsuleRadius();
+		float PlayerSize = PlayerCharacter->GetCapsuleComponent()->GetScaledCapsuleRadius();
 		float EnemySize = GetCapsuleComponent()->GetScaledCapsuleRadius();
 		//FVector EnemyLoction = GetActorLocation();
-		if(FVector::DistXY(EnemyPos, PlayerPos) <= EnemyAttribut.Range+EnemySize) //
+		if(FVector::DistXY(EnemyPos, PlayerPos) <= EnemyAttribut.Range+EnemySize+PlayerSize-5) //
 		{
 			//Cast<AOAPlayerCharecter>(PlayerCharacter)->DamgePlayer(DamgeAmount);
 			PlayerCharacter->DamgePlayer(DamgeAmount);
@@ -140,7 +141,7 @@ void AOrbAreanaEnemy::Move(FVector PlayerPos)
 	
 	float EnemySize = GetCapsuleComponent()->GetScaledCapsuleRadius();
 
-	if(FVector::DistXY(EnemyPos, PlayerPos) <= EnemyAttribut.Range+EnemySize-5)
+	if(FVector::DistXY(EnemyPos, PlayerPos) <= EnemyAttribut.Range+EnemySize)
 	{
 		return;
 	}
@@ -161,18 +162,22 @@ void AOrbAreanaEnemy::UpdateAI(float DeltaTime, FVector PlayerPos)
 	DotPrukuktValue = FVector::DotProduct(EnemyForwardVector,ToPlayerDiraction);
 	bSeePlayer = DotPrukuktValue > DotProduktSeePlayer;
 	
-	if (not bSeePlayer)
+	float EnemySize = GetCapsuleComponent()->GetScaledCapsuleRadius();
+	if (not bSeePlayer or FVector::Dist2D(PlayerPos,EnemyPos) > MaxVeiwingRange+EnemySize)
 	{
+		bSeePlayer = false;
 		DebugColor = {255,0,0};
 		return;
 	}
 	// Cross
 	CrossPrudoktValue = FVector::CrossProduct(EnemyForwardVector,ToPlayerDiraction);
-	DebugColor = {0,255,0};
-	if (DotPrukuktValue > TresholdDotPrudukt)
+
+
+	if (DotPrukuktValue > TresholdDotPrudukt )
 	{
 		return;
 	}
+	DebugColor = {0,255,0};
 	float TurnDiraction = 1.f;
 	
 	if (CrossPrudoktValue.Z < 0)
@@ -209,6 +214,7 @@ void AOrbAreanaEnemy::PrintDebugValues()
 
 void AOrbAreanaEnemy::DrawDebug()
 {
-	DrawDebugSphere(GetWorld(),EnemyPos,EnemyAttribut.Range,10,DebugColor);
+	float EnemySize = GetCapsuleComponent()->GetScaledCapsuleRadius();
+	DrawDebugSphere(GetWorld(),EnemyPos,EnemyAttribut.Range+EnemySize,10,DebugColor);
 	DrawDebugDirectionalArrow(GetWorld(), EnemyPos, EnemyPos + GetActorForwardVector() * 150.f, 30.f, DebugColor, false, 0.f, 0, 3.f);
 }
