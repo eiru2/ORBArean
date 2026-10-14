@@ -24,16 +24,12 @@ void AOAPlayerCharecter::BeginPlay()
 {
 	Super::BeginPlay();
 	SetActorLabel( FString("dumbAss") );
-
 	
-	// DifficultySpeedMultiplier.Add(EGameDifficulty::Easy, 1.0f);
-	// DifficultySpeedMultiplier.Add(EGameDifficulty::Medium, 0.75f);
-	// DifficultySpeedMultiplier.Add(EGameDifficulty::Hard, 0.5f);
-	
-
 	UpdatePlayerSpeed();
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
+		AreanPlayerControl = PlayerController;
+		PlayerController->SetShowMouseCursor(true);
 		if (ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer())
 		{
 			if (UEnhancedInputLocalPlayerSubsystem* InputSubsystem =
@@ -67,7 +63,7 @@ void AOAPlayerCharecter::BeginPlay()
 	{
 		if (Orb == "No.29")
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Orb name %s exsiste"), *Orb );
+			UE_LOG(LogTemp, Warning, TEXT("Orb name %s exist"), *Orb );
 		}
 	}
 	
@@ -98,10 +94,10 @@ void AOAPlayerCharecter::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("LootName %s"), *LootDrop.Name )
 		UE_LOG(LogTemp, Warning, TEXT("Value %f"), LootDrop.Value )
 		// int32 temp = LootDrop.Rarity;
-		// FText Rarty;
-		// UEnum::GetDisplayValueAsText(LootDrop.Rarity, Rarty);
-		// UE_LOG(LogTemp, Warning, TEXT("Rarty %s"), *Rarty.ToString())
-		UE_LOG(LogTemp, Warning, TEXT("Rarty %s"),*LootDrop.RartyLabel[LootDrop.Rarity])
+		// FText Rarity;
+		// UEnum::GetDisplayValueAsText(LootDrop.Rarity, Rarity);
+		// UE_LOG(LogTemp, Warning, TEXT("Rarity %s"), *Rarity.ToString())
+		UE_LOG(LogTemp, Warning, TEXT("Rarity %s"),*LootDrop.RartyLabel[LootDrop.Rarity])
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("---------------------------------------------") )
@@ -126,10 +122,6 @@ void AOAPlayerCharecter::Tick(float DeltaTime)
 	// UpdateOrb(ArrayOfOrbs);
 	PrintDebugValues();
 	CheckGameState();
-	int32 i = 0;
-
-	
-	
 }
 // Called to bind functionality to input
 void AOAPlayerCharecter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -146,7 +138,7 @@ void AOAPlayerCharecter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	EnhancedInputComponent->BindAction(DamageActionTesst, ETriggerEvent::Triggered, this, &AOAPlayerCharecter::InputReciveDamge);
 	
-	EnhancedInputComponent->BindAction(DealDamageAction,ETriggerEvent::Triggered, this, &AOAPlayerCharecter::InputDealDamge);
+	EnhancedInputComponent->BindAction(DealDamageAction,ETriggerEvent::Triggered, this, &AOAPlayerCharecter::SpawnProjectile);
 
 	EnhancedInputComponent->BindAction(HealAction, ETriggerEvent::Triggered, this, &AOAPlayerCharecter::InputHeal);
 	
@@ -174,18 +166,44 @@ void AOAPlayerCharecter::DamgePlayer(float InAmount)
 	PlayerAttribute.Health = FMath::Clamp(PlayerAttribute.Health, 0.0f, PlayerAttribute.MaxHealth);
 }
 
+//Combat
 void AOAPlayerCharecter::DealDamge(AOrbAreanaEnemy*)
 {
+
+}
+
+void AOAPlayerCharecter::SpawnProjectile()
+{
+	if (GameState != EGameState::Playing){return;}
 	
+	FHitResult CurseHit;
+	AreanPlayerControl->GetHitResultUnderCursor(ECC_Visibility, false, CurseHit);
+	
+	//Setting diraction
+	
+	FVector ShootDirection = CurseHit.ImpactPoint - GetActorLocation();
+	// ShootDirection.Z = 0
+	ShootDirection = ShootDirection.GetSafeNormal2D();
+	
+
+	FVector SpawnLoction = GetActorLocation() + ShootDirection*GetCapsuleComponent()->GetScaledCapsuleRadius()+ ShootDirection*SpawnDistenc;
+	// FVector SpawnLoction = GetActorLocation() + ShootDirection*SpawnDistenc;
+	
+	FActorSpawnParameters SpawnParameters;
+	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	
+	AActor* Projectal = GetWorld()->SpawnActor<AActor>(
+		ProjectTileBp,
+		SpawnLoction,
+		ShootDirection.Rotation(),
+		SpawnParameters
+		);
 }
 
 // Player Movment
 void AOAPlayerCharecter::MovePlayer(const FInputActionValue& Value)
 {
-	if (GameState != EGameState::Playing)
-	{
-		return;
-	}
+	if (GameState != EGameState::Playing){return;}
 	FVector2D MovementValue = Value.Get<FVector2D>();
 
 	AddMovementInput(GetActorForwardVector(), MovementValue.X);
@@ -281,38 +299,26 @@ void AOAPlayerCharecter::AddScore(int32 InAmount)
 // Input Calls
 void AOAPlayerCharecter::InputHeal()
 {
-	if (GameState != EGameState::Playing)
-	{
-		return;
-	}
+	if (GameState != EGameState::Playing){return;}
 	
 	HealPlayer(TempHeal);
 }
 
 void AOAPlayerCharecter::InputHealMax()
 {
-	if (GameState != EGameState::Playing)
-	{
-		return;
-	}
+	if (GameState != EGameState::Playing){return;}
 	HealPlayer(PlayerAttribute.MaxHealth);
 }
 
 void AOAPlayerCharecter::InputReciveDamge()
 {
-	if (GameState != EGameState::Playing)
-	{
-		return;
-	}
+	if (GameState != EGameState::Playing){return;}
 	DamgePlayer(TempDamge);
 }
 
-void AOAPlayerCharecter::InputDealDamge()
+void AOAPlayerCharecter::InputDealMeleeDamage()
 {
-	if (GameState != EGameState::Playing)
-	{
-		return;
-	}
+	if (GameState != EGameState::Playing){return;}
 	
 	TArray<AOrbAreanaEnemy*> ToRemoveList;
 	
@@ -320,14 +326,18 @@ void AOAPlayerCharecter::InputDealDamge()
 	float PlayerRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
 	DrawDebugSphere(GetWorld(),PlayerLoctionVector,PlayerRadius+PlayerAttribute.Range,10,FColor(255,0,0),false, 1);
 	for (AOrbAreanaEnemy* Enemy : ArraOfEnemy)
-	{
+	{	
 		FVector EnemyPos = Enemy->GetActorLocation();
 		float EnemySize = Enemy->GetCapsuleComponent()->GetScaledCapsuleRadius();
-		if (FVector::Dist2D(PlayerLoctionVector,EnemyPos) < PlayerAttribute.Range+PlayerRadius+ EnemySize)
+		if (not IsValid(Enemy))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Enem,y Health before %f"), Enemy->EnemyAttribut.Health)
+			ToRemoveList.Add(Enemy);
+		}
+		else if (FVector::Dist2D(PlayerLoctionVector,EnemyPos) < PlayerAttribute.Range+PlayerRadius+ EnemySize)
+		{
+			// UE_LOG(LogTemp, Warning, TEXT("Enem,y Health before %f"), Enemy->EnemyAttribut.Health)
 			Enemy->DamgeRecive(PlayerAttribute.Damage);
-			UE_LOG(LogTemp, Warning, TEXT("Enem,y Health After %f"), Enemy->EnemyAttribut.Health)
+			// UE_LOG(LogTemp, Warning, TEXT("Enem,y Health After %f"), Enemy->EnemyAttribut.Health)
 			if (Enemy->EnemyAttribut.Health <= 0)
 			{
 				ToRemoveList.Add(Enemy);
@@ -338,35 +348,29 @@ void AOAPlayerCharecter::InputDealDamge()
 	for (AOrbAreanaEnemy* Enemy : ToRemoveList)
 	{
 		ArraOfEnemy.Remove(Enemy);
-		Enemy->Destroy();
+		if (IsValid(Enemy))
+		{
+			Enemy->Destroy();
+		}
 	}
 }
 
 void AOAPlayerCharecter::InputAddScore()
 {
-	if (GameState != EGameState::Playing)
-	{
-		return;
-	}
+	if (GameState != EGameState::Playing){return;}
 	AddScore(TempScore);
 }
 
 // void AOAPlayerCharecter::InputMove();
 void AOAPlayerCharecter::InputStartSprint()
 {
-	if (GameState != EGameState::Playing)
-	{
-		return;
-	}
+	if (GameState != EGameState::Playing){return;}
 	Sprinting = TRUE;
 	UpdatePlayerSpeed();
 }
 void AOAPlayerCharecter::InputStopSprint()
 {
-	if (GameState != EGameState::Playing)
-	{
-		return;
-	}
+	if (GameState != EGameState::Playing){return;}
 	Sprinting = FALSE;
 	UpdatePlayerSpeed();
 }

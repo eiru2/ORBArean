@@ -67,7 +67,7 @@ void AOrbAreanaEnemy::Tick(float DeltaTime)
 		HealthBarInstance->Update(EnemyAttribut.Health, EnemyAttribut.MaxHealth);
 	}
 
-	if (Timer > EnemyAttribut.AtackkColdown)
+	if (Timer > EnemyAttribut.AttackCooldown)
 	{
 		if (DealDamgeToPlayer(EnemyAttribut.Damage, PlayerLocation))
 		{
@@ -199,6 +199,10 @@ void AOrbAreanaEnemy::UpdateAI(float DeltaTime, FVector PlayerPos)
 void AOrbAreanaEnemy::DamgeRecive(float DamgeAmount)
 {
 	EnemyAttribut.Health -=DamgeAmount;
+	if (EnemyAttribut.Health <=0)
+	{
+		this->Destroy();
+	}
 }
 
 // Debug

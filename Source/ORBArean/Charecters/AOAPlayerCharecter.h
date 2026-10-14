@@ -56,7 +56,6 @@ enum class EGameDifficulty : uint8
 	Easy,
 	Medium,
 	Hard,
-	Test
 };
 // FLootDrop
 
@@ -114,8 +113,21 @@ public:
 		FLootDrop ("LoveSword", 99999, FLootDrop::Legndery),
 	};
 	
-	//void AddScore(int32 InAmount);
-	//void HealPlayer(float InAmount);
+	//Helper
+	UPROPERTY()
+	APlayerController* AreanPlayerControl;
+	
+	//Combat
+	UPROPERTY(EditAnywhere,Category= "Player|Combat")
+	TSubclassOf<AActor> ProjectTileBp;
+	
+	UPROPERTY(EditAnywhere,Category= "Player|Combat")
+	float 
+	
+	UPROPERTY(EditAnywhere,Category= "Player|Combat")
+	float SpawnDistenc = 20;
+	
+	//Input
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputMappingContext* DefaultMappingContext;
 		
@@ -202,12 +214,14 @@ public:
 
 	
 	void AddScore(int32 InAmount);
-	void DamgePlayer(float InAmount);
-	void DealDamge(AOrbAreanaEnemy*);
 	void LoseLife();
 	void HealPlayer(float InAmount);
 	void UpdatePlayerSpeed();
 	
+	//Combat fuction
+	void DamgePlayer(float InAmount);
+	void DealDamge(AOrbAreanaEnemy*);
+	void SpawnProjectile();
 	
 	
 	void CheckGameState();
@@ -220,7 +234,7 @@ public:
 	void InputHeal();
 	void InputHealMax();
 	void InputReciveDamge();
-	void InputDealDamge();
+	void InputDealMeleeDamage();
 	void InputAddScore();
 	
 	void MovePlayer(const FInputActionValue& Value);

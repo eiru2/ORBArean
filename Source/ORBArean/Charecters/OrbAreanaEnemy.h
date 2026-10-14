@@ -29,7 +29,7 @@ struct FEnemyState
 	UPROPERTY(EditAnywhere,Category="|Attack")
 	float Range = 25.f;
 	UPROPERTY(EditAnywhere,Category="|Attack")
-	float AtackkColdown = 1.f;
+	float AttackCooldown = 1.f;
 };
 
 
@@ -56,7 +56,7 @@ public:
 	
 	
 	UPROPERTY(EditAnywhere,Category="Enemy|Info")
-	FString EnemyName;
+	FString EnemyName = "BasicEnemy";
 	
 	UPROPERTY(EditAnywhere,Category="Enemy|Stats")
 	FEnemyState EnemyAttribut;
