@@ -54,4 +54,13 @@ void AOrbAreanProjectile::DamageEnemy(AActor* ThisAcoter, AActor* OtherActor)
 	
 }
 
+void AOrbAreanProjectile::LifeSpanExpired()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Prosjectile Destroy"))
+	
+	Super::LifeSpanExpired();
+}
+
+
+
 

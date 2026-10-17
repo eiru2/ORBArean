@@ -6,7 +6,10 @@
 
 void UHealthBar::Update(float CurrentHealth, float MaxHealth)
 {
-	HealthBar->SetPercent(CurrentHealth/MaxHealth);
+	if (CurrentHealth != 0)
+	{
+		HealthBar->SetPercent(CurrentHealth/MaxHealth);
+	}
 
 	CurrentHeatlhLabel->SetText(FText::AsNumber(CurrentHealth));
 	

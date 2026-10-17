@@ -10,10 +10,14 @@
 //#include "../../../../../../../Program Files/Epic Games/UE_5.8/Engine/Plugins/Media/AjaMedia/Source/AjaMedia/Private/Shared/AjaMediaAllowPlatformTypes.h"
 #include "Splines/SplineMath.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/WidgetComponent.h"
 #include "AOAPlayerCharecter.generated.h"
 
 
 class AOrbAreanaEnemy;
+
+class UOrbAreanEndScreenWidge;
+class UOrbAreanHUDWidge;
 
 USTRUCT(meta=(DisableSplitPin))
 struct FCharecterState
@@ -117,12 +121,18 @@ public:
 	UPROPERTY()
 	APlayerController* AreanPlayerControl;
 	
+	UPROPERTY(EditAnywhere,Category="Player|Debug")
+	bool ShowDebuging = true;
+	
 	//Combat
 	UPROPERTY(EditAnywhere,Category= "Player|Combat")
 	TSubclassOf<AActor> ProjectTileBp;
 	
 	UPROPERTY(EditAnywhere,Category= "Player|Combat")
-	float 
+	float AttackCooldown = 1;
+	
+	UPROPERTY(EditAnywhere,Category= "Player|Combat")
+	float AttackCooldownTimer = 0;
 	
 	UPROPERTY(EditAnywhere,Category= "Player|Combat")
 	float SpawnDistenc = 20;
@@ -193,7 +203,7 @@ public:
 	FString Name = "Tor ";
 	
 	UPROPERTY(EditAnywhere,Category="Game|Info")
-	int64 ScoreWinCondition = 200000000000;
+	int64 ScoreWinCondition = 2000;
 	
 	UPROPERTY(EditAnywhere,Category="Game|Info")
 	EGameState GameState = EGameState::Playing;
@@ -201,6 +211,15 @@ public:
 	UPROPERTY(EditAnywhere,Category="Game|Info")
 	EGameDifficulty GameDifficulty = EGameDifficulty::Easy;
 	
+	//UI and Hud
+	UPROPERTY(EditAnywhere,Category= "Player|UI")
+	TSubclassOf<UOrbAreanHUDWidge> HUDWidgeClass;
+	
+	UPROPERTY(EditAnywhere,Category= "Player|UI")
+	TSubclassOf<UOrbAreanEndScreenWidge> EndScreenWidgeClass;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Player|UI")
+	UWidgetComponent* HealthWidgetComp;
 
 
 	
@@ -211,6 +230,9 @@ public:
 	
 	TArray<AOrbAreanaEnemy*> ArraOfEnemy;
 	
+	
+	// UPROPERTY()
+	// UHealthBar* HealthBarInstance;
 
 	
 	void AddScore(int32 InAmount);
@@ -224,7 +246,6 @@ public:
 	void SpawnProjectile();
 	
 	
-	void CheckGameState();
 	
 	void PrintDebugValues();
 	
@@ -241,7 +262,11 @@ public:
 	void InputStartSprint();
 	void InputStopSprint();
 	
+	// System
+	void CheckGameState();
 	void UpdateOrb(AOrbAreanEnergyOrb* Orb);
+	void UpdateHealthBar();
+	void ShowEndScreen();
 	
 	// Setup funksjon
 	TArray<AOrbAreanaEnemy*> GetEnemCharecter();

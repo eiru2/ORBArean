@@ -24,8 +24,8 @@ AOrbAreanaEnemy::AOrbAreanaEnemy()
 	
 	// Help By Unreals Ai Assistance To Set up The widge
 	HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
-	HealthWidgetComp->SetupAttachment(RootComponent);
-	
+	HealthWidgetComp->SetupAttachment(GetRootComponent());
+	HealthWidgetComp->SetDrawSize(FVector2D(80.f,10.f));
 	HealthWidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
     
 	// Space: Screen makes it always face the camera; Space: World keeps it in 3D

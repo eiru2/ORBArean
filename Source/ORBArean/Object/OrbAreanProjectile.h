@@ -46,7 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Projectile|State")
 	float LifeSpan = 1;
 	
-	
-	//Debug
+	virtual void LifeSpanExpired() override;
+	// Debug
 };
 

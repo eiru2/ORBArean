@@ -10,6 +10,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Microsoft/AllowMicrosoftPlatformTypes.h"
+#include "ORBArean/widge/OrbAreanHUDWidge.h"
+#include "ORBArean/widge/OrbAreanEndScreenWidge.h"
 
 
 // Sets default values
@@ -17,6 +19,15 @@ AOAPlayerCharecter::AOAPlayerCharecter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
+	HealthWidgetComp->SetupAttachment(GetRootComponent());
+	HealthWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+	HealthWidgetComp->SetDrawSize(FVector2D(80.f,10.f));
+	HealthWidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+	// Space: Screen makes it always face the camera; Space: World keeps it in 3D
+	HealthWidgetComp->SetDrawAtDesiredSize(true);
+	
 }
 
 // Called when the game starts or when spawned
@@ -25,11 +36,19 @@ void AOAPlayerCharecter::BeginPlay()
 	Super::BeginPlay();
 	SetActorLabel( FString("dumbAss") );
 	
+	UpdateHealthBar();
+
+	
 	UpdatePlayerSpeed();
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
 		AreanPlayerControl = PlayerController;
 		PlayerController->SetShowMouseCursor(true);
+		if (HUDWidgeClass)
+		{
+			UOrbAreanHUDWidge* HUDWidge = CreateWidget<UOrbAreanHUDWidge>(PlayerController,HUDWidgeClass);
+			HUDWidge->AddToViewport();
+		}
 		if (ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer())
 		{
 			if (UEnhancedInputLocalPlayerSubsystem* InputSubsystem =
@@ -118,9 +137,9 @@ void AOAPlayerCharecter::BeginPlay()
 void AOAPlayerCharecter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	AttackCooldownTimer+=DeltaTime;
 	// UpdateOrb(ArrayOfOrbs);
-	PrintDebugValues();
+	if (ShowDebuging){PrintDebugValues();}
 	CheckGameState();
 }
 // Called to bind functionality to input
@@ -164,6 +183,7 @@ void AOAPlayerCharecter::DamgePlayer(float InAmount)
 	}
 	//Health = FMath::Min(Health,MaxHealth);
 	PlayerAttribute.Health = FMath::Clamp(PlayerAttribute.Health, 0.0f, PlayerAttribute.MaxHealth);
+	UpdateHealthBar();
 }
 
 //Combat
@@ -174,8 +194,12 @@ void AOAPlayerCharecter::DealDamge(AOrbAreanaEnemy*)
 
 void AOAPlayerCharecter::SpawnProjectile()
 {
-	if (GameState != EGameState::Playing){return;}
 	
+	if (GameState != EGameState::Playing){return;}
+	if (AttackCooldownTimer < AttackCooldown){
+		return;
+	}
+	AttackCooldownTimer=0;
 	FHitResult CurseHit;
 	AreanPlayerControl->GetHitResultUnderCursor(ECC_Visibility, false, CurseHit);
 	
@@ -243,6 +267,7 @@ void AOAPlayerCharecter::HealPlayer(float InAmount)
 	PlayerAttribute.Health += InAmount;
 	//Health = FMath::Min(Health,MaxHealth);
 	PlayerAttribute.Health = FMath::Clamp(PlayerAttribute.Health, 0.0f, PlayerAttribute.MaxHealth);
+	UpdateHealthBar();
 }
 
 void AOAPlayerCharecter::LoseLife()
@@ -265,11 +290,15 @@ void AOAPlayerCharecter::CheckGameState()
 	{
 		GameState =  EGameState::Lost;
 		UE_LOG(LogTemp, Warning, TEXT("Game Lost"))
+		ShowEndScreen();
+		
 	}
 	else if (Score >= ScoreWinCondition)
 	{
 		GameState =  EGameState::Won;
 		UE_LOG(LogTemp, Warning, TEXT("Game Won"))
+		ShowEndScreen();
+		
 	}
 	else if (AmountOfOrbsLeft <=0)
 	{
@@ -375,6 +404,7 @@ void AOAPlayerCharecter::InputStopSprint()
 	UpdatePlayerSpeed();
 }
 
+// System
 void AOAPlayerCharecter::UpdateOrb(AOrbAreanEnergyOrb* Orb)
 {
 	if (Orb)
@@ -385,6 +415,32 @@ void AOAPlayerCharecter::UpdateOrb(AOrbAreanEnergyOrb* Orb)
 		
 	}
 }
+
+void AOAPlayerCharecter::UpdateHealthBar()
+{
+	UHealthBar* HealthBarInstance = Cast<UHealthBar>(HealthWidgetComp->GetUserWidgetObject());
+	if (IsValid(HealthBarInstance))
+	{
+		HealthBarInstance->Update(PlayerAttribute.Health,PlayerAttribute.MaxHealth);
+	}
+}
+
+void AOAPlayerCharecter::ShowEndScreen()
+{
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		if (not IsValid(PlayerController))
+		{
+			return;
+		}
+		if (EndScreenWidgeClass)
+		{
+			UOrbAreanEndScreenWidge* EndScreenWidge = CreateWidget<UOrbAreanEndScreenWidge>(PlayerController,EndScreenWidgeClass);
+			EndScreenWidge->AddToViewport();
+		}
+	}
+}
+
 
 // Setupp
 TArray<AOrbAreanaEnemy*> AOAPlayerCharecter::GetEnemCharecter()
