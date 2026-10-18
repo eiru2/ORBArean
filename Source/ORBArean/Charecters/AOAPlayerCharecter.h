@@ -245,8 +245,6 @@ public:
 	void DealDamge(AOrbAreanaEnemy*);
 	void SpawnProjectile();
 	
-	
-	
 	void PrintDebugValues();
 	
 	

@@ -194,12 +194,10 @@ void AOAPlayerCharecter::DealDamge(AOrbAreanaEnemy*)
 
 void AOAPlayerCharecter::SpawnProjectile()
 {
-	
 	if (GameState != EGameState::Playing){return;}
-	if (AttackCooldownTimer < AttackCooldown){
-		return;
-	}
+	if (AttackCooldownTimer < AttackCooldown){return;}
 	AttackCooldownTimer=0;
+	
 	FHitResult CurseHit;
 	AreanPlayerControl->GetHitResultUnderCursor(ECC_Visibility, false, CurseHit);
 	

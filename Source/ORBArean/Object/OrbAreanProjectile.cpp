@@ -54,6 +54,7 @@ void AOrbAreanProjectile::DamageEnemy(AActor* ThisAcoter, AActor* OtherActor)
 	
 }
 
+// Deuflt Actor funksjon ovreider.
 void AOrbAreanProjectile::LifeSpanExpired()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Prosjectile Destroy"))
