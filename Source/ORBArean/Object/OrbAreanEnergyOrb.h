@@ -39,13 +39,15 @@ public:
 	FColor Color = FColor(255,255,255,255); 
 	
 	UPROPERTY(EditAnywhere,Category="Config")
-	FString OrbName = "rtyhj";
+	FString OrbName = "DefltOrb";
 	
 	bool IsPickedUp = false;
 	UPROPERTY()
 	ACharacter* PlayerCharacter;
 	
-	
+	// SFX VFX
+	UPROPERTY(EditAnywhere,Category="Config|SFX")
+	USoundBase* PickUpSFX;
 	
 	void OrbPickedUp(int32 InPointValue);
 };

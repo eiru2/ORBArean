@@ -52,10 +52,14 @@ void AOrbAreanEnergyOrb::OrbPickedUp(int32 InPointValue)
 
 	if (IsValid(PlayerCharacter))
 	{
+		if (IsValid(PickUpSFX))
+		{
+			UGameplayStatics::PlaySoundAtLocation(this,PickUpSFX,GetActorLocation());
+		}
 		Cast<AOAPlayerCharecter>(PlayerCharacter)->AddScore(InPointValue);
 		UE_LOG(LogTemp,Warning,TEXT("Picked Up!! Orb %s Baind %d points"), *OrbName , OrbPointValue);
-		Destroy();
 		Cast<AOAPlayerCharecter>(PlayerCharacter)->UpdateOrb(this);
+		Destroy();
 	}
 }
 

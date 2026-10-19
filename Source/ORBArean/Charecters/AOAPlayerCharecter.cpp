@@ -5,13 +5,17 @@
 #include "OrbAreanaEnemy.h"
 
 #include "EnhancedInputComponent.h"
-#include "MeshPaintVisualize.h"
+// #include "MeshPaintVisualize.h"
+#include "NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Components/AudioComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Microsoft/AllowMicrosoftPlatformTypes.h"
 #include "ORBArean/widge/OrbAreanHUDWidge.h"
 #include "ORBArean/widge/OrbAreanEndScreenWidge.h"
+
 
 
 // Sets default values
@@ -28,6 +32,11 @@ AOAPlayerCharecter::AOAPlayerCharecter()
 	// Space: Screen makes it always face the camera; Space: World keeps it in 3D
 	HealthWidgetComp->SetDrawAtDesiredSize(true);
 	
+	// audio 
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioPlayer"));
+	AudioComponent->SetupAttachment(GetRootComponent());
+	AudioComponent->SetAutoActivate(false);
+
 }
 
 // Called when the game starts or when spawned
@@ -36,14 +45,23 @@ void AOAPlayerCharecter::BeginPlay()
 	Super::BeginPlay();
 	SetActorLabel( FString("dumbAss") );
 	
-	UpdateHealthBar();
-
+	if (IsValid(LevelMusic))
+	{
+		AudioComponent->SetSound(LevelMusic);
+		AudioComponent->Play();
+	}
 	
+	UpdateHealthBar();
 	UpdatePlayerSpeed();
+	
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
 		AreanPlayerControl = PlayerController;
-		PlayerController->SetShowMouseCursor(true);
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		InputMode.SetHideCursorDuringCapture(false);
+		AreanPlayerControl->SetInputMode(InputMode);
+		AreanPlayerControl->SetShowMouseCursor(true);
 		if (HUDWidgeClass)
 		{
 			UOrbAreanHUDWidge* HUDWidge = CreateWidget<UOrbAreanHUDWidge>(PlayerController,HUDWidgeClass);
@@ -155,7 +173,7 @@ void AOAPlayerCharecter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AOAPlayerCharecter::InputStopSprint);
 
-	EnhancedInputComponent->BindAction(DamageActionTesst, ETriggerEvent::Triggered, this, &AOAPlayerCharecter::InputReciveDamge);
+	EnhancedInputComponent->BindAction(DamageActionTesst, ETriggerEvent::Triggered, this, &AOAPlayerCharecter::InputReciveDamage);
 	
 	EnhancedInputComponent->BindAction(DealDamageAction,ETriggerEvent::Triggered, this, &AOAPlayerCharecter::SpawnProjectile);
 
@@ -169,7 +187,7 @@ void AOAPlayerCharecter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 }
 
 // Damge
-void AOAPlayerCharecter::DamgePlayer(float InAmount)
+void AOAPlayerCharecter::DamagePlayer(float InAmount)
 {
 	
 	PlayerAttribute.Health -= InAmount;
@@ -177,13 +195,21 @@ void AOAPlayerCharecter::DamgePlayer(float InAmount)
 	{
 		LoseLife();
 	}
-	if (PlayerAttribute.Health <= 0.25*PlayerAttribute.MaxHealth)
-	{
-		GEngine->AddOnScreenDebugMessage(8,2.11f,FColor::Emerald,TEXT("LowHealth"));
-	}
+	// if (PlayerAttribute.Health <= PlayerAttribute.LowHeatlhThrseold*PlayerAttribute.MaxHealth)
+	// {
+	// 	GEngine->AddOnScreenDebugMessage(8,2.11f,FColor::Emerald,TEXT("LowHealth"));
+	// }
 	//Health = FMath::Min(Health,MaxHealth);
 	PlayerAttribute.Health = FMath::Clamp(PlayerAttribute.Health, 0.0f, PlayerAttribute.MaxHealth);
 	UpdateHealthBar();
+	if (IsValid(TakeDamageSFX))
+	{
+	UGameplayStatics::PlaySoundAtLocation(this,TakeDamageSFX,GetActorLocation());
+	}
+	if (IsValid(TakeDamageVFX))
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,TakeDamageVFX,GetActorLocation());
+	}
 }
 
 //Combat
@@ -197,7 +223,10 @@ void AOAPlayerCharecter::SpawnProjectile()
 	if (GameState != EGameState::Playing){return;}
 	if (AttackCooldownTimer < AttackCooldown){return;}
 	AttackCooldownTimer=0;
-	
+	if (IsValid(ShootSFX))
+	{
+		UGameplayStatics::PlaySoundAtLocation(this,ShootSFX,GetActorLocation());
+	}
 	FHitResult CurseHit;
 	AreanPlayerControl->GetHitResultUnderCursor(ECC_Visibility, false, CurseHit);
 	
@@ -275,8 +304,17 @@ void AOAPlayerCharecter::LoseLife()
 	PlayerAttribute.Health = PlayerAttribute.MaxHealth;
 	if (PlayerAttribute.Life == 0)
 	{
+		if (IsValid(DeathSFX))
+		{
+			UGameplayStatics::PlaySoundAtLocation(this,DeathSFX,GetActorLocation());
+		}
+		if (IsValid(DeathVFX))
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,DeathVFX,GetActorLocation());
+		}
 		GameState = EGameState::Lost;
 	}
+
 		
 }
 
@@ -337,10 +375,10 @@ void AOAPlayerCharecter::InputHealMax()
 	HealPlayer(PlayerAttribute.MaxHealth);
 }
 
-void AOAPlayerCharecter::InputReciveDamge()
+void AOAPlayerCharecter::InputReciveDamage()
 {
 	if (GameState != EGameState::Playing){return;}
-	DamgePlayer(TempDamge);
+	DamagePlayer(TempDamge);
 }
 
 void AOAPlayerCharecter::InputDealMeleeDamage()
@@ -593,7 +631,7 @@ void AOAPlayerCharecter::PrintDebugValues()
 // 		{
 // 			if(PC->IsInputKeyDown(EKeys::One))
 // 			{
-// 				DamgePlayer(TempDamge);
+// 				DamagePlayer(TempDamge);
 // 			}
 // 			if(PC->IsInputKeyDown(EKeys::Two))
 // 			{

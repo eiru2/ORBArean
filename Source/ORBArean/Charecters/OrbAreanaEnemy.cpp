@@ -2,6 +2,8 @@
 
 #include "OrbAreanaEnemy.h"
 #include "AOAPlayerCharecter.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -113,8 +115,8 @@ bool AOrbAreanaEnemy::DealDamgeToPlayer(float DamgeAmount,FVector PlayerPos)
 		//FVector EnemyLoction = GetActorLocation();
 		if(FVector::DistXY(EnemyPos, PlayerPos) <= EnemyAttribut.Range+EnemySize+PlayerSize-5) //
 		{
-			//Cast<AOAPlayerCharecter>(PlayerCharacter)->DamgePlayer(DamgeAmount);
-			PlayerCharacter->DamgePlayer(DamgeAmount);
+			//Cast<AOAPlayerCharecter>(PlayerCharacter)->DamagePlayer(DamgeAmount);
+			PlayerCharacter->DamagePlayer(DamgeAmount);
 			return true;
 		}
 	}
@@ -170,14 +172,10 @@ void AOrbAreanaEnemy::UpdateAI(float DeltaTime, FVector PlayerPos)
 		return;
 	}
 	// Cross
-	CrossPrudoktValue = FVector::CrossProduct(EnemyForwardVector,ToPlayerDiraction);
-
-
-	if (DotPrukuktValue > TresholdDotPrudukt )
-	{
-		return;
-	}
-	DebugColor = {0,255,0};
+	CrossPrudoktValue = FVector::CrossProduct(EnemyForwardVector, ToPlayerDiraction);
+	
+	if (DotPrukuktValue > TresholdDotPrudukt) { return; }
+	DebugColor = {0, 255, 0};
 	float TurnDiraction = 1.f;
 	
 	if (CrossPrudoktValue.Z < 0)
@@ -199,8 +197,20 @@ void AOrbAreanaEnemy::UpdateAI(float DeltaTime, FVector PlayerPos)
 void AOrbAreanaEnemy::DamgeRecive(float DamgeAmount)
 {
 	EnemyAttribut.Health -=DamgeAmount;
+	if (IsValid(TakeDamageVFX))
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, TakeDamageVFX, GetActorLocation());
+	}
 	if (EnemyAttribut.Health <=0)
 	{
+		if (IsValid(DeathVFX))
+		{
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this,DeathVFX,GetActorLocation());
+		}
+		if (IsValid(DeathSFX))
+		{
+			UGameplayStatics::PlaySoundAtLocation(this,DeathSFX,GetActorLocation());
+		}
 		this->Destroy();
 	}
 }

@@ -14,6 +14,7 @@
 #include "AOAPlayerCharecter.generated.h"
 
 
+class UNiagaraSystem;
 class AOrbAreanaEnemy;
 
 class UOrbAreanEndScreenWidge;
@@ -32,6 +33,9 @@ struct FCharecterState
 	int32 Life = 3;
 	UPROPERTY(EditAnywhere,Category="Health")
 	int32 MaxLife = 3;
+	UPROPERTY(EditAnywhere,Category="Health")
+	float LowHeatlhThrseold = 0.25f;
+
 	
 	UPROPERTY(EditAnywhere,Category="Speed")
 	float BaseSpeed = 1200;
@@ -233,7 +237,29 @@ public:
 	
 	// UPROPERTY()
 	// UHealthBar* HealthBarInstance;
-
+	
+	//Audio / effect
+	UPROPERTY(EditAnywhere, Category="Feedback|Music")
+	UAudioComponent* AudioComponent;
+	
+	UPROPERTY(EditAnywhere,Category="Feedback|Music")
+	USoundBase* LevelMusic;
+	
+	UPROPERTY(EditAnywhere, Category="Feedback|SFX")
+	USoundBase* ShootSFX;
+	
+	UPROPERTY(EditAnywhere, Category="Feedback|SFX")
+	USoundBase* TakeDamageSFX;
+	
+	UPROPERTY(EditAnywhere,Category="Feedback|SFX")
+	USoundBase* DeathSFX;
+	
+	UPROPERTY(EditAnywhere, Category="Feedback|VFX")
+	UNiagaraSystem* TakeDamageVFX;
+	
+	UPROPERTY(EditAnywhere, Category="Feedback|VFX")
+	UNiagaraSystem* DeathVFX;
+	
 	
 	void AddScore(int32 InAmount);
 	void LoseLife();
@@ -241,7 +267,7 @@ public:
 	void UpdatePlayerSpeed();
 	
 	//Combat fuction
-	void DamgePlayer(float InAmount);
+	void DamagePlayer(float InAmount);
 	void DealDamge(AOrbAreanaEnemy*);
 	void SpawnProjectile();
 	
@@ -252,7 +278,7 @@ public:
 	//Input Function
 	void InputHeal();
 	void InputHealMax();
-	void InputReciveDamge();
+	void InputReciveDamage();
 	void InputDealMeleeDamage();
 	void InputAddScore();
 	

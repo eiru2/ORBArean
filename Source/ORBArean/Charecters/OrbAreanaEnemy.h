@@ -9,6 +9,7 @@
 #include "ORBArean/widge/HealthBar.h"
 #include "OrbAreanaEnemy.generated.h"
 
+class UNiagaraSystem;
 class AOAPlayerCharecter;
 
 USTRUCT()
@@ -107,6 +108,16 @@ public:
 	
 	UPROPERTY(EditAnywhere,Category="Enemy|AI")
 	bool bRequiedVisonToTurn = true;
+	
+	//SFX/VFX
+	UPROPERTY(EditAnywhere,Category="Enemy|Feedback|VFX")
+	UNiagaraSystem* TakeDamageVFX;
+	
+	UPROPERTY(EditAnywhere,Category="Enemy|Feedback|VFX")
+	UNiagaraSystem* DeathVFX;
+	
+	UPROPERTY(EditAnywhere,Category="Enemy|FeedBack|SFX")
+	USoundBase* DeathSFX;
 	
 	// Debug
 	UPROPERTY(EditAnywhere,Category="Enemy|Debug")
