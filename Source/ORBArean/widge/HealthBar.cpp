@@ -10,9 +10,22 @@ void UHealthBar::Update(float CurrentHealth, float MaxHealth)
 	{
 		HealthBar->SetPercent(CurrentHealth/MaxHealth);
 	}
-
-	CurrentHeatlhLabel->SetText(FText::AsNumber(CurrentHealth));
+	FText HealthSting;
+	FText MaxHealthSting;
+	for (FNumberDisplay Number : DisplayNumber)
+	{
+		if (CurrentHealth/Number.Value < 1){break;}
+		float tempValue = FMath::RoundToInt((CurrentHealth/Number.Value)*10.f)/10.f;
+		HealthSting = FText::FromString(FString::Printf(TEXT("%s%s"),*FString::SanitizeFloat(tempValue), *Number.Symbol));
+	}
+	for (FNumberDisplay Number : DisplayNumber)
+	{
+		if (MaxHealth/Number.Value < 1){break;}
+		float tempValue = FMath::RoundToInt((MaxHealth/Number.Value)*10.f)/10.f;
+		MaxHealthSting = FText::FromString(FString::Printf(TEXT("%s%s"),*FString::SanitizeFloat(tempValue), *Number.Symbol));
+	}
+	CurrentHeatlhLabel->SetText(HealthSting);
 	
-	MaxhealthLabel->SetText(FText::AsNumber(MaxHealth));
+	MaxhealthLabel->SetText(MaxHealthSting);
 	
 }

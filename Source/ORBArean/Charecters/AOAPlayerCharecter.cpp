@@ -23,6 +23,9 @@ AOAPlayerCharecter::AOAPlayerCharecter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	TestSpeedMulty.Add(EGameDifficulty::Easy,1.f);
+	TestSpeedMulty.Add(EGameDifficulty::Medium,0.75f);
+	// TestSpeedMulty.Add(EGameDifficulty::Hard,0.5f);
 	
 	HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthWidget"));
 	HealthWidgetComp->SetupAttachment(GetRootComponent());

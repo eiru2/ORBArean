@@ -45,6 +45,7 @@ struct FCharecterState
 	
 	UPROPERTY(EditAnywhere,Category="Damage")
 	float Range = 100;
+	
 };
 
 UENUM()
@@ -179,8 +180,11 @@ public:
 	// Easy, Medium Harde
 	UPROPERTY(EditAnywhere,Category="Player|Stats|Speed")
 	// Can break if there is duplicate keys
-	//TMap<EGameDifficulty, float> DifficultySpeedMultiplier;
 	TArray<float> DifficultySpeedMultiplier = {1.f, 0.75f, 0.5f};
+
+	UPROPERTY(EditAnywhere, Category="Player|Stats|Speed",meta=(EditFixedOrder))
+	TMap<EGameDifficulty, float> TestSpeedMulty;
+
 
 
 	

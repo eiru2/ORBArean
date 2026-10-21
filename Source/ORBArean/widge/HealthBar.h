@@ -8,6 +8,14 @@
 #include "Components/TextBlock.h"
 #include "HealthBar.generated.h"
 
+USTRUCT()
+struct FNumberDisplay
+{
+	GENERATED_BODY()
+	float Value;
+	FString Symbol;
+};
+
 /**
  * 
  */
@@ -16,6 +24,7 @@ class ORBAREAN_API UHealthBar : public UUserWidget
 {
 	GENERATED_BODY()
 	
+
 	
 public:
 
@@ -29,6 +38,16 @@ public:
 	UPROPERTY( meta = (BindWidget))
 	UTextBlock* MaxhealthLabel;
 	
-
+	// Ai to fast finshed
+	UPROPERTY(EditAnywhere,Category="Color|Heatlth")
+	TArray<FNumberDisplay> DisplayNumber = {
+		{ 1,  ""  },
+		{ 1e3,  "k"  }, // Tusen
+		{ 1e6,  "M"  }, // Million
+		{ 1e9,  "B"  }, // Milliard (Billion på engelsk)
+		{ 1e12, "T"  }, // Billion (Trillion på engelsk)
+		{ 1e15, "Qa" }, // Quadrillion
+		{ 1e18, "Qi" }  // Quintillion
+	};
 	
 };
