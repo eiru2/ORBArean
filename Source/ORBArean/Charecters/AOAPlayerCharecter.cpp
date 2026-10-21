@@ -325,14 +325,14 @@ void AOAPlayerCharecter::CheckGameState()
 	if (PlayerAttribute.Life <=0)
 	{
 		GameState =  EGameState::Lost;
-		UE_LOG(LogTemp, Warning, TEXT("Game Lost"))
+		// UE_LOG(LogTemp, Warning, TEXT("Game Lost"))
 		ShowEndScreen();
 		
 	}
 	else if (Score >= ScoreWinCondition)
 	{
 		GameState =  EGameState::Won;
-		UE_LOG(LogTemp, Warning, TEXT("Game Won"))
+		// UE_LOG(LogTemp, Warning, TEXT("Game Won"))
 		ShowEndScreen();
 		
 	}

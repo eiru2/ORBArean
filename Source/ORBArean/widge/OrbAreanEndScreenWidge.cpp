@@ -3,9 +3,18 @@
 
 #include "OrbAreanEndScreenWidge.h"
 
+#include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 #include "ORBArean/Charecters/AOAPlayerCharecter.h"
 
+
+void UOrbAreanEndScreenWidge::NativeConstruct()
+{
+	Super::NativeConstruct();
+	RestartButton->OnClicked.AddDynamic(this,&UOrbAreanEndScreenWidge::RestartGame);
+	
+}
 
 void UOrbAreanEndScreenWidge::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
@@ -25,4 +34,11 @@ void UOrbAreanEndScreenWidge::NativeTick(const FGeometry& MyGeometry, float InDe
 	{
 		ResultText->SetText(FText::FromString(FString("YOU Lost")));
 	}
+
+}
+
+void UOrbAreanEndScreenWidge::RestartGame()
+{
+	UE_LOG(LogTemp,Warning,TEXT("Rest"))
+	UGameplayStatics::OpenLevel(GetWorld(),"BaseGameMode");
 }

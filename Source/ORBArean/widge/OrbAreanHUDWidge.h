@@ -30,15 +30,11 @@ class ORBAREAN_API UOrbAreanHUDWidge : public UUserWidget
 	UPROPERTY( meta = (BindWidget))
 	UTextBlock* ReamingOrbs;
 	
-	UPROPERTY( meta = (BindWidget))
-	UButton* RestartButton;
-	
 	UPROPERTY(EditAnywhere,Category="Color|Heatlth")
 	FSlateColor HeatlhWarningColor = FColor(255,0,0);
 	
 	UPROPERTY(EditAnywhere,Category="Color|Heatlth")
 	FSlateColor HealthColor = FColor(255,255,255);
 
-	UFUNCTION()
-	void RestartGame();
+
 };

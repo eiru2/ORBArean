@@ -34,7 +34,3 @@ void UOrbAreanHUDWidge::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 
 }
 
-void UOrbAreanHUDWidge::RestartGame()
-{
-	UGameplayStatics::OpenLevel(GetWorld(),"BaseGameMode");
-}

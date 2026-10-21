@@ -8,7 +8,7 @@
 #include "OrbAreanEndScreenWidge.generated.h"
 
 
-
+class UButton;
 
 UCLASS()
 class ORBAREAN_API UOrbAreanEndScreenWidge : public UUserWidget
@@ -20,8 +20,14 @@ class ORBAREAN_API UOrbAreanEndScreenWidge : public UUserWidget
 	
 	// UPROPERTY( meta = (BindWidget))
 	// UTextBlock* ScoreText;
+	virtual void NativeConstruct() override;
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
-
+	UFUNCTION()
+	void RestartGame();
+	
+	UPROPERTY( meta = (BindWidget))
+	UButton* RestartButton;
+	
 };
